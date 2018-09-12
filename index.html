@@ -9,8 +9,8 @@
            body {margin:0px; }
          .gameDiv {
            position: absolute;
-           width: 60vw;
-           height: 60vw;
+           width: 80vw;
+           height: 80vw;
            max-width: 500px;
            max-height: 500px;
            
@@ -21,6 +21,23 @@
            display: inline-block;
            
          }
+         .aaa{
+           animation: abc 1s ease    ;
+          
+         }
+          @keyframes abc {
+            from{opacity: 1 ;}
+            to {opacity: 0;
+            display:none;
+}
+          }
+          .beforeForKing{
+            display:none;
+          }
+          .afterForKing{
+            display:inline;
+          }
+
             
        </style>
        
@@ -29,13 +46,22 @@
        <body>
       
 <div class="gameDiv" id="gameDiv">
+    <svg id="start" xmlns="http://www.w3.org/2000/svg">
 
+      <image  xlink:href="forKing.svg" class="beforeForKing"
+      id="SVGKing1" width='50' height='50' x='200' y='200'> </image>
+
+  <!--     <use xlink:href='forKing.svg#test'  class="beforeForKing"  id="SVGKing1" />  
+        <image  xlink:href='forKing.svg#test' class="beforeForKing"
+         id="SVGKing1" width='200' height='200'> </image>
+          -->
+    </svg>
 
 </div>
               
            
         <script src="gamefield.js"></script>
-        <script src="shashkiFugure.js"></script>
+        
  
         
        </body>
