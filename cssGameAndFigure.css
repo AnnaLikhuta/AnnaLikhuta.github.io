@@ -32,6 +32,94 @@
 
 
 
+ /*
+
+ // touch event
+ var conteinerFigure= document.getElementById('figure');
+ conteinerFigure.addEventListener('touchstart',beginerMove, false )
+ var countGame=0;
+
+ conteinerFigure.ontouchmove=moveAt;
+
+ var clickPageX=0;
+ var clickPageY=0;
 
 
+ var currentGigure;
+ function beginerMove(EO){
+   EO.preventDefault();
+    currentGigure=EO.target;
+   console.log('следующий ход')
+
+   //массив касаний
+   var touchInfo=EO.targetTouches[0];
+
+    // узнать координаты клика. не скорректирванные
+clickPageX=touchInfo.pageX;
+clickPageY=touchInfo.pageY;
+console.log(clickPageY)
+
+
+
+ }
+
+ function moveAt(EO){
+   EO=EO|| window.event;
+   EO.preventDefault();
+
+ //  var pageX=EO.pageX;
+//   var pageY=EO.pageY;
+ //  var clickCoordObj= translateCoord(pageX,pageY);
+//  var clickPageX=clickCoordObj.pageX;
+//  var  clickPageY=clickCoordObj.pageY;
+var touchInfo=EO.targetTouches[0];
+
+   currentGigure.setAttribute("cx",(touchInfo.pageX));
+   currentGigure.setAttribute("cy", (touchInfo.pageY));
+
+   
  
+ }
+
+
+
+var imgElem=document.getElementById('IBall');
+imgElem.ontouchstart=ballTouchStart;
+imgElem.ontouchmove=ballTouchMove;
+imgElem.ontouchend=ballTouchEnd;
+
+var touchShiftX=0;
+var touchShiftY=0;
+
+// обработчик вызывается, когда палец касается мяча
+function ballTouchStart(EO) {
+ EO.preventDefault();
+
+ var touchInfo=EO.targetTouches[0];
+ // запоминаем разницу между координатами пальца и координатами мяча
+ touchShiftX=touchInfo.pageX-imgElem.offsetLeft;
+ touchShiftY=touchInfo.pageY-imgElem.offsetTop;
+
+ // мяч двигать не надо
+}
+
+// обработчик вызывается, когда палец уходит с мяча
+function ballTouchEnd(EO) {
+ EO.preventDefault();
+
+ // мяч двигать не надо
+}
+
+// обработчик вызывается, когда палец, прикасаясь к мячу, движется
+function ballTouchMove(EO) {
+ EO.preventDefault();
+
+ // двигаем мяч
+ // его новые координаты есть координаты касания минус запомненная разница
+ var touchInfo=EO.targetTouches[0];
+ imgElem.style.left=(touchInfo.pageX-touchShiftX)+"px";
+ imgElem.style.top=(touchInfo.pageY-touchShiftY)+"px";
+}
+
+
+*/

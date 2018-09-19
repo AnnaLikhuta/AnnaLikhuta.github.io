@@ -368,7 +368,7 @@ var conteinerFigure= document.getElementById('figure');
     // about.whoCanStep.color=colorFigure;
    
       
-     document.ontouchmove = moveAtTouch;
+    conteinerFigure.ontouchmove = moveAtTouch;
    
      function moveAtTouch(EO){
       // EO.preventDefault();
