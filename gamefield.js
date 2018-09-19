@@ -268,1119 +268,1016 @@ groupFigure.setAttribute('id','figure')
                   id: true, 
                   translate: true}
 
-                  var conteinerFigure= document.getElementById('figure');
-                  conteinerFigure.addEventListener('mousedown',beginerMove, false )
-                  var countGame=0;
-                  
+
+var conteinerFigure= document.getElementById('figure');
+
+
    // подписаться на touch события
-                  conteinerFigure.addEventListener('touchstart',beginerMoveForTouch, false )
+   conteinerFigure.addEventListener('touchstart',beginerMoveForTouch, false )
 
-                  function beginerMoveForTouch(EO){
-                    EO=EO|| window.event;
-                    EO.preventDefault();
+   function beginerMoveForTouch(EO){
+     EO=EO|| window.event;
+     EO.preventDefault();
 
-                    console.log('следующий ход')
-                  
-                    // хранить информацию про старый ход, текущий
-                    var lastStepObj={};
-                    // хранить про следующую позицию
-                   var nextStepObj={};
-                   // для записи возможно побитой фигуры
-                   nextStepObj.forFightFigure={}
-                   // для записи отметки дамка
-                   // добавить в глобальный объект about
-                   // для учета типа step - normal/fight/king -1/2/3
-                   // первоначально все ходят нормально
-                   var typeStep=1;
-                   lastStepObj.typeStep=typeStep;
-                   nextStepObj.typeStep=typeStep;
-                  
-                    // узнать координаты клика. не скорректирванные
-                    var touchInfo=EO.targetTouches[0];
+     console.log('следующий ход')
+   
+     // хранить информацию про старый ход, текущий
+     var lastStepObj={};
+     // хранить про следующую позицию
+    var nextStepObj={};
+    // для записи возможно побитой фигуры
+    nextStepObj.forFightFigure={}
+    // для записи отметки дамка
+    // добавить в глобальный объект about
+    // для учета типа step - normal/fight/king -1/2/3
+    // первоначально все ходят нормально
+    var typeStep=1;
+    lastStepObj.typeStep=typeStep;
+    nextStepObj.typeStep=typeStep;
+   
+     // узнать координаты клика. не скорректирванные
+     var touchInfo=EO.targetTouches[0];
 
-                    var clickPageX=touchInfo.pageX;
-                    var clickPageY=touchInfo.pageY;
-                  
-                    // узнать координаты клика с учетом утступов, скорректиров
-                      var clickCoordObj= translateCoord(clickPageX,clickPageY);
-                      clickPageX=clickCoordObj.pageX;
-                      clickPageY=clickCoordObj.pageY;
-                  
-                    // узнать какой квадрат был выбран
-                    var currentIDSquare= getIDSquare(clickPageX,clickPageY );
-                    lastStepObj.currentIDSquare=currentIDSquare;
-                  
-                    //  а это фигура есть в дамках? проверить в about.king
-                   // console.log(about)
-                   // console.log(currentIDSquare)
-                  
-                    if( currentIDSquare in about.king ){
-                      lastStepObj.typeStep=3;
-                      nextStepObj.typeStep=3;
-                    }
-                  
-                    // сохранить первонаальную позицию. надо ли?
-                    
-                     var oldPosition={
-                      clickPageX: about.posForSquare[currentIDSquare].posX,
-                      clickPageY: about.posForSquare[currentIDSquare].posY
-                    }
-                    
-                  
-                    // координаы клика мыши/touch
-                    var currentGigure=EO.target;
-                    // добавить ее в конец в DOM. проблема с Z-index решена так
-                    conteinerFigure.appendChild(currentGigure);
-                  
-                   // узнать цвет шашки и записать в оба объекта
-                   var colorFigure= currentGigure.getAttribute('fill');
-                   lastStepObj.colorFigure=colorFigure;
-                   nextStepObj.colorFigure=colorFigure;
-                  
-                   // записать в контроль хода. записать в процессе
-                   //  about.whoCanStep.color=colorFigure;
-                  
-                  
-                  
-                    // получить возможные,правильные клетки для хода. уже проверили
-                   
-                    
-                   nextStepObj.posFigure=legalyPos(lastStepObj.colorFigure,lastStepObj.currentIDSquare,
-                     lastStepObj.typeStep,"transferSquare", nextStepObj);
-                  
-                   //nextStepObj.posFigure=abc;
-                   //  а есть ли на этих позициях шашки
-                      if(lastStepObj.typeStep==1)
-                      {checFigure(lastStepObj,nextStepObj)}
-                      if(lastStepObj.typeStep==3){
-                        // вызов другого  checFigureю был в legalyPos
-                       // console.log(3)
-                      }
-                  
-                    // а ходила раньше фигура
-                    // можно походитьдважды, если на второй раз тоже что-то бьешь
-                    if(lastStepObj.currentIDSquare == about.whoCanStep.id){
-                      doubleStep(lastStepObj, nextStepObj);}
-                  
-                     // подсветить клетки, у которых true
-                     toLightSquare(nextStepObj);
-                  
-                     console.log(lastStepObj);
-                     console.log(nextStepObj);
-                  
-                      // записать цвет фигуры, для контроля хода
-                   //
-                   // about.whoCanStep.color=colorFigure;
-                  
-                     
-                    document.ontouchmove = moveAtTouch;
-                  
-                    function moveAtTouch(EO){
-                     // EO.preventDefault();
-                      EO=EO|| window.event;
-                     
-
-                                        
-                    // узнать координаты клика. не скорректирванные
-                    var touchInfo=EO.targetTouches[0];
-
-                    var pageX=touchInfo.pageX;
-                    var pageY=touchInfo.pageY;
-                  
-                    // узнать координаты клика с учетом утступов, скорректиров
-                      var clickCoordObj= translateCoord(pageX,pageY);
-                 
-                     var clickPageX=clickCoordObj.pageX;
-                     var  clickPageY=clickCoordObj.pageY;
-                      currentGigure.setAttribute("cx", clickPageX);
-                      currentGigure.setAttribute("cy", clickPageY);
-                      // нужна ли  эта обводка???
-                      // у дамки остается белая обводка
-                      if(nextStepObj.typeStep==1 ||
-                        nextStepObj.typeStep==2){
-                      currentGigure.setAttribute("stroke", "red");}
-                      currentGigure.setAttribute('stroke-width',mainSizeWidth*0.005);
-                  
-
-                      currentGigure.ontouchend = function(EO) { //когда закончилось перетаскивание
-                        // неудачно передавался в параметры  aboutStepObj вместе с ЕО
-                        console.log(touchInfo)
-                        EO=EO|| window.event;
-                        EO.preventDefault();
-                        
-  
-                       //  touchInfo=EO.targetTouches[0];
-  
-                         pageX=touchInfo.pageX;
-                        pageY=touchInfo.pageY;
-                        console.log(pageX,pageY )
-                        // проверить, отпущен ли клик в нужных координатах
-                        nextStepObj.result= whereMouseUp(pageX,pageY,nextStepObj, lastStepObj )
-                    
-                        about.whoCanStep.translate=false;
-                    
-                            
-                            // записать цвет фигуры, для контроля хода
-                     
-                      about.whoCanStep.color=colorFigure;
-                     
-                              
-                      if(nextStepObj.result.condition) {
-                          // обрать обводку клетки и обновить массив. скорректиров глоб объекты
-                        changeGameObjPosFigure(nextStepObj,lastStepObj);
-                      // нарисовать красиво,  по центру эту фигуру
-                      paintNiceFirure(currentGigure, nextStepObj,oldPosition);
-                        
-                      }
-                      // если неверное перемещение - вернуть на первоначальную позицию
-                      if(!nextStepObj.result.condition){
-                        paintNiceFirure(currentGigure,nextStepObj,oldPosition);
-                    
-                      }
-                      
-                      // стала ли фигра дамкой. естьтакая
-                     var haveKing= toBecomeKing(nextStepObj);
-                     if(haveKing ){
-                       console.log('рисовать корону');
-                       toDrawKing(nextStepObj);
-                     }
-                    
-                      // удалить на доске и в объекте
-                      deleteFigureOnDesk(nextStepObj);
-                    
-                    // canDoubleStep(lastStepObj,nextStepObj );
-                      // то,что ниже в самую последнюю очередь
-                       // console.log(result)
-                        document.onmousemove = null;
-                        currentGigure.onmouseup = null;
-                        nextStepObj=null;
-                        lastStepObj=null;
-                    
-                      };
-  
-                      
-                    
-                    }
-                    
-                  document.ondragstart = function() {
-                    
-                    return false;
-                    };
-                   
-                    // удалить все "aqua"
-                    //v исключительно для тестировки
-                  //  deleteAllAqua();
-                  
-                  
-                  // проверка на  конец игры. все фигуры одного цвета остались
-                    if( Object.keys(about.arrFigure).length<=22){
-                     // console.log('victory');
-                       console.log('победу одержала  '+victory());
-                  
-                        }
-                  
-                        console.log(about)
-                  
-                  }
-                  //------------------------------------ конец beginerMove
-
-
-                  
-                function beginerMove(EO){
-                    EO=EO|| window.event;
-                    console.log('следующий ход')
-                  
-                    // сохранять следующие доступные шаги
-                   // var posFigure={};
-                  
-                    // хранить информацию про старый ход, текущий
-                    var lastStepObj={};
-                    // хранить про следующую позицию
-                   var nextStepObj={};
-                   // для записи возможно побитой фигуры
-                   nextStepObj.forFightFigure={}
-                   // для записи отметки дамка
-                   // добавить в глобальный объект about
-                   //about.king={}
-                  
-                   
-                  
-                  
-                   // для учета типа step - normal/fight/king -1/2/3
-                   // первоначально все ходят нормально
-                   var typeStep=1;
-                   lastStepObj.typeStep=typeStep;
-                   nextStepObj.typeStep=typeStep;
-                  
-                    // узнать координаты клика. не скорректирванные
-                    var clickPageX=EO.pageX;
-                    var clickPageY=EO.pageY;
-                  
-                    // узнать координаты клика с учетом утступов, скорректиров
-                      var clickCoordObj= translateCoord(clickPageX,clickPageY);
-                      clickPageX=clickCoordObj.pageX;
-                      clickPageY=clickCoordObj.pageY;
-                  
-                    // узнать какой квадрат был выбран
-                    var currentIDSquare= getIDSquare(clickPageX,clickPageY );
-                    lastStepObj.currentIDSquare=currentIDSquare;
-                  
-                    //  а это фигура есть в дамках? проверить в about.king
-                   // console.log(about)
-                   // console.log(currentIDSquare)
-                  
-                    if( currentIDSquare in about.king ){
-                      lastStepObj.typeStep=3;
-                      nextStepObj.typeStep=3;
-                    }
-                  
-                    // сохранить первонаальную позицию. надо ли?
-                    
-                     var oldPosition={
-                      clickPageX: about.posForSquare[currentIDSquare].posX,
-                      clickPageY: about.posForSquare[currentIDSquare].posY
-                    }
-                    
-                  
-                    // координаы клика мыши
-                    var currentGigure=EO.target;
-                    // добавить ее в конец в DOM. проблема с Z-index решена так
-                    conteinerFigure.appendChild(currentGigure);
-                  
-                   // узнать цвет шашки и записать в оба объекта
-                   var colorFigure= currentGigure.getAttribute('fill');
-                   lastStepObj.colorFigure=colorFigure;
-                   nextStepObj.colorFigure=colorFigure;
-                  
-                   // записать в контроль хода. записать в процессе
-                   //  about.whoCanStep.color=colorFigure;
-                  
-                  
-                  
-                    // получить возможные,правильные клетки для хода. уже проверили
-                   
-                    
-                   nextStepObj.posFigure=legalyPos(lastStepObj.colorFigure,lastStepObj.currentIDSquare,
-                     lastStepObj.typeStep,"transferSquare", nextStepObj);
-                  
-                   //nextStepObj.posFigure=abc;
-                   //  а есть ли на этих позициях шашки
-                      if(lastStepObj.typeStep==1)
-                      {checFigure(lastStepObj,nextStepObj)}
-                      if(lastStepObj.typeStep==3){
-                        // вызов другого  checFigureю был в legalyPos
-                       // console.log(3)
-                      }
-                  
-                    // а ходила раньше фигура
-                    // можно походитьдважды, если на второй раз тоже что-то бьешь
-                    if(lastStepObj.currentIDSquare == about.whoCanStep.id){
-                      doubleStep(lastStepObj, nextStepObj);}
-                  
-                     // подсветить клетки, у которых true
-                     toLightSquare(nextStepObj);
-                  
-                     console.log(lastStepObj);
-                     console.log(nextStepObj);
-                  
-                      // записать цвет фигуры, для контроля хода
-                   //
-                   // about.whoCanStep.color=colorFigure;
-                  
-                     
-                    document.onmousemove = function(EO) {
-                      moveAt(EO);
-                    };
-                  
-                    function moveAt(EO){
-                      EO=EO|| window.event;
-                      var pageX=EO.pageX;
-                      var pageY=EO.pageY;
-                      var clickCoordObj= translateCoord(pageX,pageY);
-                     var clickPageX=clickCoordObj.pageX;
-                     var  clickPageY=clickCoordObj.pageY;
-                      currentGigure.setAttribute("cx", clickPageX);
-                      currentGigure.setAttribute("cy", clickPageY);
-                      // нужна ли  эта обводка???
-                      // у дамки остается белая обводка
-                      if(nextStepObj.typeStep==1 ||
-                        nextStepObj.typeStep==2){
-                      currentGigure.setAttribute("stroke", "red");}
-                      currentGigure.setAttribute('stroke-width',mainSizeWidth*0.005);
-                  
-                      
-                    
-                    }
-                    currentGigure.onmouseup = function(EO) { //когда закончилось перетаскивание
-                      // неудачно передавался в параметры  aboutStepObj вместе с ЕО
-                      EO=EO|| window.event;
-                      var pageX=EO.pageX;
-                      var pageY=EO.pageY;
-                    //  console.log(aboutStepObj)
-                    //----------------------------------------------------test
-                  
-                    // записать цвет фигуры, для контроля хода
-                    //about.whoCanStep.color=colorFigure;
-                  
-                  
-                      // проверить, отпущен ли клик в нужных координатах
-                      nextStepObj.result= whereMouseUp(pageX,pageY,nextStepObj, lastStepObj )
-                  
-                      about.whoCanStep.translate=false;
-                  
-                          
-                          // записать цвет фигуры, для контроля хода
-                   
-                    about.whoCanStep.color=colorFigure;
-                   
-                            
-                    if(nextStepObj.result.condition) {
-                        // обрать обводку клетки и обновить массив. скорректиров глоб объекты
-                      changeGameObjPosFigure(nextStepObj,lastStepObj);
-                    // нарисовать красиво,  по центру эту фигуру
-                    paintNiceFirure(currentGigure, nextStepObj,oldPosition);
-                      
-                    }
-                    // если неверное перемещение - вернуть на первоначальную позицию
-                    if(!nextStepObj.result.condition){
-                      paintNiceFirure(currentGigure,nextStepObj,oldPosition);
-                  
-                    }
-                    
-                    // стала ли фигра дамкой. естьтакая
-                   var haveKing= toBecomeKing(nextStepObj);
-                   if(haveKing ){
-                     console.log('рисовать корону');
-                     toDrawKing(nextStepObj);
-                   }
-                  
-                    // удалить на доске и в объекте
-                    deleteFigureOnDesk(nextStepObj);
-                  
-                  // canDoubleStep(lastStepObj,nextStepObj );
-                    // то,что ниже в самую последнюю очередь
-                     // console.log(result)
-                      document.onmousemove = null;
-                      currentGigure.onmouseup = null;
-                      nextStepObj=null;
-                      lastStepObj=null;
-                  
-                    };
-                    
-                  document.ondragstart = function() {
-                    
-                    return false;
-                    };
-                   
-                    // удалить все "aqua"
-                    //v исключительно для тестировки
-                  //  deleteAllAqua();
-                  
-                  
-                  // проверка на  конец игры. все фигуры одного цвета остались
-                    if( Object.keys(about.arrFigure).length<=22){
-                     // console.log('victory');
-                       console.log('победу одержала  '+victory());
-                  
-                        }
-                  
-                        console.log(about)
-                  
-                  }
-                  //------------------------------------ конец beginerMove
-                  
-                    function getCoords(elem) {   // кроме IE8-
-                    var box = elem.getBoundingClientRect();
-                    return {
-                      top: box.top + pageYOffset,
-                      left: box.left + pageXOffset
-                    };
-                    }
-                  
-                        // узнать какой квадрат
-                   function getIDSquare(clickPageX,clickPageY ){
-                    var numberArr=getNumberArr(); // для  перебора. чтобы искать  ["11", "21", "31...
-                    // координата высчитывается так- знаю коорд верхнего левого угла
-                    // прибавляю размеры квадрата игрового. если клик в этом диапазоне- гуд
-                        for(var i=0; i<=numberArr.length-1; i++){
-                      var posXForSearch=about.posForSquare[numberArr[i]].posX;
-                        if(posXForSearch<=clickPageX && clickPageX<=posXForSearch+sizeForGameSquare){
-                          var posYForSearch=about.posForSquare[numberArr[i]].posY;
-                            if(posYForSearch<=clickPageY && clickPageY<=posYForSearch+sizeForGameSquare )
-                          return numberArr[i];
-                        }
-                    }
-                   }
-                      // проверка хоа. есть ли на этих клетках другие шашки. еще на двойной ход сделать
-                      // ее дописать
-                    function checFigure(lastStepObj,nextStepObj){
-                      var posFigure={}
-                          //какие позиции предлагает
-                          // вернуть нормальный тип хода
-                        //  lastStepObj.typeStep==1;
-                      // массив из допустимых ходов
-                      var posForStepArr=Object.keys(nextStepObj.posFigure);
-                    //  console.log(nextStepObj.posFigure)
-                  
-                      // есть ли на этих позициях шашки
-                      /*
-                      if(lastStepObj.typeStep==3){
-                        console.log('typeStep=3')
-                        // другая  checFigure для  king
-                        return;
-                      }
-                      */
-                      for( var i=0; i<=posForStepArr.length-1; i++){
-                        if (posForStepArr[i] in about.arrFigure  ){
-                        //  console.log(posForStepArr[i])
-                  
-                                // если шашка такого же цвета
-                                // 2 позиции. стандартные. +1 клетка в стороны
-                  
-                                // стоит фигура на этой клетке такого же цвета
-                  
-                          if(about.arrFigure[posForStepArr[i]].color==nextStepObj.colorFigure){
-                            nextStepObj.posFigure[posForStepArr[i]].condition=false;
-                          }
-                          // если шашка другого цвета,то подсветить на клетку больше
-                          
-                          else if( about.arrFigure[posForStepArr[i]].color!=nextStepObj.colorFigure ){
-                            // не подходит  эта позиция, зафиксировать
-                            lastStepObj.typeStep=2;
-                  
-                            nextStepObj.posFigure[posForStepArr[i]].condition=false;
-                  
-                  
-                            // узнать другую позицию. следующую
-                  
-                            // здесь новая позиция. а есть ли здесь фигура
-                           var posFigure= legalyPos(lastStepObj.colorFigure,lastStepObj.currentIDSquare,
-                               lastStepObj.typeStep,posForStepArr[i],nextStepObj );
-                             //  console.log(posFigure)
-                  
-                               // вернул одну позицию. узнать ключ
-                               var nextForStep=Object.keys(posFigure);
-                              // console.log(posFigure)
-                  
-                               if((nextForStep[0] in about.arrFigure)!=true ){
-                                 // если нет фигуры. нужна эта позиция
-                                 nextStepObj.posFigure[nextForStep[0]]={condition:true};
-                                 // записать для nextStepObj.forFightFigure  в значении-куда надо встать,чтобы убрать
-                                 
-                  
-                                 nextStepObj.forFightFigure[nextForStep[0]]=posForStepArr[i] ;
-                  
-                               //  nextStepObj.forFightFigure[posForStepArr[i]]={[nextForStep[0]]:true} ;
-                  
-                               }
-                          }
-                        }
-                      }
-                     // return aboutStepObj;
-                     //lastStepObj.typeStep=1;
-                    }
-                  
-                      // узнать клетки, куда могу ходить
-                  
-                     function legalyPos(colorFigure, currentIDSquare,typeStep, transferSquare,nextStepObj){
-                       var forNextStep=[];
-                       // перевод в число
-                       transferSquare=+transferSquare;
-                       currentIDSquare=+currentIDSquare;
-                       // надо ли тут posFigure.по идее - да
-                       var posFigure={};
-                      // удалить опредыдущем  ходе, если другой цвет
-                       if(about.whoCanStep.color!= colorFigure){
-                        about.whoCanStep.id=true;
-                       }
-                       
-                       // если цвета совпадают. повторный ход недопустить (но если бил  до этого - нужно пропустить)
-                       //одинаковые цвета?
-                       // била до этого?
-                       // от случайных ходов не спасает.
-                       console.log(about)
-                  
-                       if((about.whoCanStep.color== colorFigure && currentIDSquare!=about.whoCanStep.id &&
-                        about.whoCanStep.translate==true ) 
-                     ){
-                        posFigure[currentIDSquare]={condition:true};
-                        console.log('вы уже ходили ')
-                        return posFigure;
-                  
-                  
-                       }
-                       
-                  
-                      // узнать клетки, куда могу ходить
-                      // обычный ход
-                         if(typeStep==1)   {
-                      if(colorFigure=='magenta'){
-                        forNextStep.push(currentIDSquare-10+1, currentIDSquare+10+1);
-                      }
-                  
-                      if(colorFigure=='aqua'){
-                        forNextStep.push(currentIDSquare-10-1, currentIDSquare+10-1);
-                      }
-                    }
-                  //--------------------------------
-                  // вызов из checkFigure
-                      if(typeStep==2 ){
-                       // console.log('currentIDSquare')
-                  
-                        if(colorFigure=='magenta'){
-                          // в левую сторону
-                          if(transferSquare<currentIDSquare ){
-                          forNextStep.push(currentIDSquare-20+2);}
-                          // в правуюсторону
-                          if(transferSquare>currentIDSquare ){
-                            forNextStep.push(currentIDSquare+20+2);}
-                  
-                          }
-                          // другой цвет фигуры
-                        if(colorFigure=='aqua'){
-                          if(transferSquare<currentIDSquare){
-                            forNextStep.push(currentIDSquare-20-2);
-                         }
-                          if(transferSquare> currentIDSquare)
-                            forNextStep.push( currentIDSquare+20-2);
-                          }
-                        }
-                  // ходит дамка
-                  
-                        if(typeStep==3){
-                          // изменяются  клетки  -9 +9 -11 +11
-                          forNextStep= forNextStep.concat(  (toFindPosForKing(currentIDSquare, 9,colorFigure,nextStepObj )) )
-                          console.log(forNextStep)
-                          console.log(nextStepObj)
-                  
-                          // здесь  хорошо проверять. разбито по 4-ем направлениям
-                  
-                          forNextStep= forNextStep.concat((toFindPosForKing(currentIDSquare, -9,colorFigure,nextStepObj )))
-                  
-                          forNextStep= forNextStep.concat((toFindPosForKing(currentIDSquare, 11,colorFigure ,nextStepObj)))
-                  
-                          forNextStep= forNextStep.concat((toFindPosForKing(currentIDSquare, -11,colorFigure ,nextStepObj)))
-                  
-                         // console.log(forNextStep)
-                      }
-                  
-                      //вернуть адекватные значения
-                      // если выходит за рамки, вписать текущее
-                      // можно ли  эту запись сделать красивее?
-                       forNextStep.filter((v)=>{if(10<v && v<89 && v!=20 && v!=30 &&
-                      v!=40 && v!=50 && v!=60 && v!=70 && v!=80 && v!=19 && v!=29 &&
-                      v!=39 && v!=49 && v!=59 && v!=69 && v!=79 ){posFigure[v]={condition:true} } });
-                      // узнать есть ли там вообще допустимые значения
-                      var forLenghtPosFigure=Object.keys(posFigure);
-                      if (forLenghtPosFigure.length==0){
-                        // если был пуст, записать предыдущую позицию
-                        posFigure[currentIDSquare]={condition:true}
-                      }
-                      // не  вносить изменения  в глоб объект nextStepObj
-                      /*
-                      if(typeStep==2){
-                        return posFigure;
-                  
-                      }
-                      */
-                      // записать глобально
-                    //  nextStepObj.posFigure=posFigure;
-                     return posFigure;
-                     }
-                  
-                     function doubleStep(lastStepObj, nextStepObj){
-                       //фигуры побитые есть при возможных ходах
-                       var forFight=Object.keys(nextStepObj.forFightFigure)
-                      // есть ли эта фигра/клетка в записи  whoCanStep
-                      if((lastStepObj.currentIDSquare == about.whoCanStep.id) &&
-                      forFight.length!=0 ){
-                      //  console.log('верный ход')
-                  
-                      }
-                      else {
-                        //console.log('неверный ход. обработать');
-                      //если нечего бить, то в каждую допустимую позицию для хода condition=false
-                      // и ходить некуда
-                      var badPos=Object.keys(nextStepObj.posFigure);
-                     // console.log(badPos)
-                  
-                      for(var i=0; i<=badPos.length-1; i++){
-                        nextStepObj.posFigure[badPos[i]].condition=false;
-                      }
-                  }
-                     }
-                  
-                  
-                  // функция для посиска клеток для дамки
-                    function toFindPosForKing(currentIDSquare, changeNumber, colorFigure,nextStepObj ){
-                      var saveCurrentIDSquare=currentIDSquare;
-                      var arr=[]
-                      while(saveCurrentIDSquare>10 && saveCurrentIDSquare<89 ){
-                        saveCurrentIDSquare=saveCurrentIDSquare+changeNumber;
-                        // если выполняется условие
-                         // проверка на допустимые значения
-                         // и есть ли такая клетка вообще
-                        if( saveCurrentIDSquare>10 && saveCurrentIDSquare<89 &&
-                          (saveCurrentIDSquare in about.posForSquare)==true   ){
-                            // если она существует, то проверим, где на пути первая фигура
-                  
-                            if(saveCurrentIDSquare in about.arrFigure  ){
-                              // вынести информацию по этой фигуре
-                             var fistFigureByWay=about.arrFigure[saveCurrentIDSquare];
-                             // проверить цвета. свой или нет
-                                if(fistFigureByWay.color==colorFigure){
-                                // совпадают. нет смысла считать дальше. не добавлять в массив
-                                return arr;
-                                 }
-                            // если не совпадают цвета - вернуть на позицию больше и уйти из функции
-                            // но проверить что на следующей клетке, есть ли фигура
-                            // saveCurrentIDSquare+changeNumber+changeNumber
-                                else if(fistFigureByWay.color!=colorFigure )        {
-                                                 
-                                  // следующая клетка
-                                  var abc=saveCurrentIDSquare+changeNumber;
-                                  // чтобы избежать в nextStepObj.forFightFigure --> 20:31
-                                  // несуществующая ячейка
-                  
-                                  if( !(abc in about.posForSquare )){
-                                    return arr;
-                                  }
-                                  // если есть, выход
-                                  else if(abc in about.arrFigure ){
-                                    return arr;
-                                  }
-                                 
-                              // проверить следующую клетку
-                            // добавить к тем, которые можно бить
-                            console.log(nextStepObj)
-                           // nextStepObj.forFightFigure={[saveCurrentIDSquare]: true}
-                                  
-                            nextStepObj.forFightFigure[abc]=saveCurrentIDSquare ;
-                              arr.push(saveCurrentIDSquare+changeNumber);
-                              return arr;
-                                }
-                            
-                            }
-                  
-                         // добавить
-                         arr.push(saveCurrentIDSquare);
-                  
-                        }
-                        // иначе выход
-                        else  saveCurrentIDSquare=0;
-                    }
-                   // console.log(arr)
-                  return arr;
-                    }
-                  
-                  
-                     // в пределах ли клетка поля находится
-                  
-                          // подсветить клетки, у которых true
-                     function toLightSquare(nextStepObj){
-                          // подсветить клетки, у которых true
-                          var squareIDForAttention=Object.keys(nextStepObj.posFigure);
-                          // console.log(squareIDForAttention)
-                       
-                           for(var i=0; i<=squareIDForAttention.length-1; i++){
-                             if(nextStepObj.posFigure[squareIDForAttention[i]].condition==true ){
-                             elem=document.getElementById(squareIDForAttention[i]);
-                             if(elem==null){
-                             return }
-                       
-                             elem.setAttribute('stroke','red');
-                             elem.setAttribute('stroke-width',mainSizeWidth*0.005);
-                  
-                            }
-                           }
-                           
-                         // дописать координаты этих клеток. а нужно ли?
-                           for( var j=0; j<=squareIDForAttention.length-1; j++){
-                            nextStepObj.posFigure[squareIDForAttention[j]].posX=
-                             about.posForSquare[squareIDForAttention[j]].posX;
-                             nextStepObj.posFigure[squareIDForAttention[j]].posY=
-                             about.posForSquare[squareIDForAttention[j]].posY;
-                           }
-                     }
-                  
-                     function translateCoord(pageX,pageY){
-                        // получить размеры дива для svg элемента
-                    var widthConteinerDiv=gameDiv.offsetWidth;
-                    var offsetLeftGameDiv=gameDiv.offsetLeft;
-                    var offsetTopGameDiv=gameDiv.offsetTop;
-                    // пересчет масштаба с учетом поправки/корректировки
-                  var delta=widthConteinerDiv/mainSizeWidth;
-                    // узнать координаты клика с учетом утступов
-                   var   clickPageX=(pageX-offsetLeftGameDiv)/delta;
-                    var  clickPageY=(pageY-offsetTopGameDiv)/delta;
-                    return {
-                      pageX: clickPageX,
-                      pageY: clickPageY
-                    }
-                     }
-                  
-                     // проверить, отпущен ли клик в нужных координатах
-                     function whereMouseUp(pageX,pageY,nextStepObj, lastStepObj ){
-                       // получить скорректиров координ
-                      var clickCoordObj= translateCoord(pageX,pageY);
-                      var clickPageX=clickCoordObj.pageX;
-                      var  clickPageY=clickCoordObj.pageY;
-                      // проверка где отпущен  клик
-                      var squareIDForAttention=Object.keys(nextStepObj.posFigure);
-                      //console.log(squareIDForAttention )
-                      for(var i=0; i<=squareIDForAttention.length-1; i++){
-                  
-                      if(nextStepObj.posFigure[squareIDForAttention[i]].condition==true ){
-                        if(clickPageX>= nextStepObj.posFigure[squareIDForAttention[i]].posX &&
-                           clickPageX<=nextStepObj.posFigure[squareIDForAttention[i]].posX+sizeForGameSquare &&
-                           clickPageY>= nextStepObj.posFigure[squareIDForAttention[i]].posY &&
-                           clickPageY<=nextStepObj.posFigure[squareIDForAttention[i]].posY+sizeForGameSquare
-                          ){
-                            return {condition:true,
-                                    newPositionID:squareIDForAttention[i]   } 
-                       // else return false;
-                      }
-                     else continue;
-                    }
-                     }
-                     // эту ошибку обработать.более точно
-                     //отпущен клик не в подсвеченных элементах
-                     console.log('клик не в новом квадрате отпущен');
-                     deleteStrokeOnFigure(nextStepObj);
-                    // about.whoCanStep.color=true;
-                    // неосторожный  ход. дать еще один шанс
-                    /*
-                    //реализовано в дополнит функции canDoubleStep
-                    //----------------------------------------------------------------
-                  if(lastStepObj.currentIDSquare in nextStepObj.posFigure){
-                    
-                   // console.log('eeee')
-                     about.whoCanStep.color=true;
-                  }
-                  */
-                    return {condition:false,
-                            newPositionID:false} }
-                  
-                  
-                    //красиво нарисовать в центре
-                     function   paintNiceFirure(figureDOM, nextStepObj,oldPosition){
-                      // для более удобного  доступа
-                      var newPositionID =nextStepObj.result.newPositionID
-                     // console.log(newPositionID);
-                       //если хреново передвинули. оставили не там
-                       if(nextStepObj.result.newPositionID==false ){
-                        var PageX=oldPosition.clickPageX+sizeForGameSquare/2;
-                        var PageY=oldPosition.clickPageY+sizeForGameSquare/2;
-                     
-                        figureDOM.setAttribute("cx", PageX);
-                        figureDOM.setAttribute("cy", PageY);
-                        return;
-                  
-                       }
-                     // координ верхнего левого угла клетки игровой
-                     var posX=nextStepObj.posFigure[newPositionID].posX;
-                     var posY=nextStepObj.posFigure[newPositionID].posY;
-                     // в середине будет с учетомполовины клетки
-                      PageX=posX+sizeForGameSquare/2;
-                      PageY=posY+sizeForGameSquare/2;
-                  
-                     figureDOM.setAttribute("cx", PageX);
-                     figureDOM.setAttribute("cy", PageY);
-                     }
-                  
-                       // убрать обводку клетки и обновить массив. скорректиров глоб объекты
-                      function changeGameObjPosFigure(nextStepObj,lastStepObj){
-                            // подсветить клетки, у которых true
-                      var squareIDForAttention=Object.keys(nextStepObj.posFigure);
-                      // console.log(squareIDForAttention)
-                   var newPositionID =nextStepObj.result.newPositionID
-                       for(var i=0; i<=squareIDForAttention.length-1; i++){
-                         if(nextStepObj.posFigure[squareIDForAttention[i]].condition==true ){
-                         elem=document.getElementById(squareIDForAttention[i]);
-                         elem.setAttribute('stroke','black');}
-                       }
-                   // перезаписать положение с учетом перемещения клетки
-                   // какой цвет был
-                      var whichColorWas= about.arrFigure[lastStepObj.currentIDSquare];
-                      // console.log(newPositionID);
-                      // var abc=lastStepObj.currentIDSquare
-                    //   console.log(about.arrFigure[11]);
-                  
-                       delete about.arrFigure[lastStepObj.currentIDSquare];
-                  
-                       // а были перемещения фигур на игровом поле верные, тогда  true и ходит следующий
-                      
-                      about.whoCanStep.translate=true;
-                      
-                  
-                       // записать новый
-                       about.arrFigure[newPositionID]=whichColorWas;
-                       // скорректировать king
-                       if(lastStepObj.typeStep==3){
-                        //  была ли эта позиция раньше в массиве 
-                           if  (lastStepObj.currentIDSquare in about.king){
-                             //  значение ключа для этой позиции(цвет, id)
-                             var newPosForKing=about.king[lastStepObj.currentIDSquare];
-                              //удалить
-                             delete about.king[lastStepObj.currentIDSquare ]
-                             //записать новую
-                             about.king[nextStepObj.result.newPositionID]=newPosForKing;
-                           }
-                       }
-                  
-                      }
-                   
-                  // убрать обводку
-                   function deleteStrokeOnFigure(nextStepObj){
-                          var squareIDForAttention=Object.keys(nextStepObj.posFigure);
-                        // console.log(squareIDForAttention)
-                           
-                        for(var i=0; i<=squareIDForAttention.length-1; i++){
-                        if(nextStepObj.posFigure[squareIDForAttention[i]].condition==true ){
-                      elem=document.getElementById(squareIDForAttention[i]);
-                      if(elem==null){
-                      return false;}
-                       elem.setAttribute('stroke','black');}
-                               }
-                   }
-                  
-                   // стала ли дамкой фигура
-                  function toBecomeKing (nextStepObj){
-                    // если дошла фигура до крайних клеток - это вторая цифра=1 или8
-                    // узнать позицию, куда в итоге стала фигура
-                   var newPos= nextStepObj.result.newPositionID;
-                   //переводв строку
-                   var posStr=newPos+'';
-                    if(posStr[1]==1 || posStr[1]==8) { 
-                       if((nextStepObj.colorFigure=='magenta' && posStr[1]==8) ||
-                        (nextStepObj.colorFigure=='aqua' && posStr[1]==1  )  ){
-                          nextStepObj.king={[newPos]:nextStepObj.colorFigure }
-                          // записать данные в глоб объект, чтобы и в след ход видеть кто дамка
-                          // позиция на поле, цвет, ее id
-                          var abc={};
-                           abc=nextStepObj.result.newPositionID;
-                          about.king[abc]={color: nextStepObj.colorFigure,
-                            id: about.arrFigure[nextStepObj.result.newPositionID].id
-                          }
-                      console.log('king')
-                      console.log(about)
-                  
-                        return true;
-                      }
-                    }
-                    return false;
-                  }
-                  
-                  function toDrawKing(nextStepObj){
-                    
-                  
-                    var whoIsKing=Object.keys(nextStepObj.king); //["68"] всегда одно значение, текущее
-                    console.log(whoIsKing);
-                    // найти квадрат, куда стала
-                    var elemToSquare=nextStepObj.result.newPositionID;
-                  // узнать id фигуры, что стоит там. сделать белый ободок
-                    var elemKing=document.getElementById(about.arrFigure[elemToSquare].id);
-                    elemKing.setAttribute('stroke-width',mainSizeWidth*0.008);
-                    elemKing.setAttribute('stroke','white');
-                  }
-                  
-                  function canDoubleStep(lastStepObj,nextStepObj ){
-                    //не было впринципе корректного хода
-                    if(nextStepObj.result.condition==false){
-                      about.whoCanStep.color=true;
-                    }
-                  
-                  }
-                  
-                  
-                  // удаляю фигуру с доски и удаляю из  about.arrFigure
-                  
-                   function deleteFigureOnDesk(nextStepObj){
-                  
-                  
-                  
-                  
-                    var checForFight=Object.keys(nextStepObj.forFightFigure);
-                    // проверка, есть ли что бить
-                    //  console.log(checForFight)
-                      if(checForFight.length==0 || nextStepObj.result.newPositionID==false ){
-                        return;
-                      }
-                      // когда игноришь,что нужно бить
-                      
-                      if( nextStepObj.result.newPositionID!=checForFight[0] &&
-                        //если возращается 2 варианта, то не выбирать постоянн второй. нужно для этого усл. ниже
-                        checForFight.length==1){
-                        return;
-                      }
-                  
-                      
-                     var deleteThisFigure=nextStepObj.forFightFigure[nextStepObj.result.newPositionID];
-                    // console.log(deleteThisFigure)
-                  
-                     var deleteFigureID=about.arrFigure[deleteThisFigure].id;
-                      console.log(deleteFigureID)
-                       var elem=document.getElementById(deleteFigureID);
-                  
-                     // фигура побита. значит эта фигура может ходить еще раз. записать ее данныею в какой  клетке
-                     var plusStep=nextStepObj.result.newPositionID;
-                    // var plusStep=about.arrFigure[nextStepObj.result.newPositionID].id;
-                  
-                     about.whoCanStep.id=plusStep;
-                     console.log(about)
-                  
-                  
-                  
-                  
-                       // тестовый подсчет очков
-                       countGame++;
-                        elem.setAttribute('class','aaa');
-                     //запланировать удаление
-                      setTimeout (function() { elem.setAttribute('display','none');  }, 1000);
-                     
-                     console.log(countGame)
-                  // удалить из глобального объекта
-                   delete about.arrFigure[deleteThisFigure]
-                  
-                   // проверка ее в king
-                   if(deleteThisFigure in about.king){
-                     delete about.king[deleteThisFigure]
-                     console.log('del king')
-                   }
-                   }
-                  
-                   // закончилась ли игра?
-                   // определить победителя
-                   function victory() {
-                  
-                    var arrOfColor=Object.keys(about.arrFigure);
-                  
-                    // если все одинаковые цвета остались,сообщить о победе
-                     function whichColorMagenta(v,i,a){
-                      
-                         return v="magenta";}
-                  
-                       function whichColorAqua(v,i,a){
-                      
-                       return v="aqua";}
-                      
-                        // кто первый даст true, тот и выиграл
-                     var answerMagenta=arrOfColor.every(whichColorMagenta);
-                     var answerAqua=arrOfColor.every(whichColorAqua);
-                  
-                    if(answerMagenta==true){
-                      return "magenta";
-                    }
-                    if(answerAqua==true){
-                      return "aqua";
-                    }
-                  
-                   }
-                  
-                   function deleteAllAqua(){
-                     var allAquaArr=Object.keys(about.arrFigure);
-                     console.log(allAquaArr);
-                     for(var i=0; i<=allAquaArr.length-1; i++){
-                      if(about.arrFigure[allAquaArr[i]].color=="aqua"){
-                        delete about.arrFigure[allAquaArr[i]];
-                      }
-                  
-                  
-                     }
-                   }
-                  
-                  
-                                  
-   /*
-
-//--------------------------------------------
-                  
-    // touch event
-    var conteinerFigure= document.getElementById('figure');
-    conteinerFigure.addEventListener('touchstart',beginerMove, false )
-    var countGame=0;
-
-    conteinerFigure.ontouchmove=moveAt;
-
-    var clickPageX=0;
-    var clickPageY=0;
-
-
-    var currentGigure;
-    function beginerMove(EO){
-      EO.preventDefault();
-       currentGigure=EO.target;
-      console.log('следующий ход')
-
-      //массив касаний
-      var touchInfo=EO.targetTouches[0];
-
-       // узнать координаты клика. не скорректирванные
-  clickPageX=touchInfo.pageX;
-  clickPageY=touchInfo.pageY;
-  console.log(clickPageY)
-
-
-
-    }
-
-    function moveAt(EO){
-      EO=EO|| window.event;
-      EO.preventDefault();
-  
-    //  var pageX=EO.pageX;
-   //   var pageY=EO.pageY;
-    //  var clickCoordObj= translateCoord(pageX,pageY);
-   //  var clickPageX=clickCoordObj.pageX;
-   //  var  clickPageY=clickCoordObj.pageY;
-   var touchInfo=EO.targetTouches[0];
-
-      currentGigure.setAttribute("cx",(touchInfo.pageX));
-      currentGigure.setAttribute("cy", (touchInfo.pageY));
-  
-      
+     var clickPageX=touchInfo.pageX;
+     var clickPageY=touchInfo.pageY;
+   
+     // узнать координаты клика с учетом утступов, скорректиров
+       var clickCoordObj= translateCoord(clickPageX,clickPageY);
+       clickPageX=clickCoordObj.pageX;
+       clickPageY=clickCoordObj.pageY;
+   
+     // узнать какой квадрат был выбран
+     var currentIDSquare= getIDSquare(clickPageX,clickPageY );
+     lastStepObj.currentIDSquare=currentIDSquare;
+   
+     //  а это фигура есть в дамках? проверить в about.king
+    // console.log(about)
+    // console.log(currentIDSquare)
+   
+     if( currentIDSquare in about.king ){
+       lastStepObj.typeStep=3;
+       nextStepObj.typeStep=3;
+     }
+   
+     // сохранить первонаальную позицию. надо ли?
+     
+      var oldPosition={
+       clickPageX: about.posForSquare[currentIDSquare].posX,
+       clickPageY: about.posForSquare[currentIDSquare].posY
+     }
+     
+     // координаы клика мыши/touch
+     var currentGigure=EO.target;
+     // добавить ее в конец в DOM. проблема с Z-index решена так
+     conteinerFigure.appendChild(currentGigure);
+   
+    // узнать цвет шашки и записать в оба объекта
+    var colorFigure= currentGigure.getAttribute('fill');
+    lastStepObj.colorFigure=colorFigure;
+    nextStepObj.colorFigure=colorFigure;
+   
+    // записать в контроль хода. записать в процессе
+     // получить возможные,правильные клетки для хода. уже проверили
     
-    }
+     
+    nextStepObj.posFigure=legalyPos(lastStepObj.colorFigure,lastStepObj.currentIDSquare,
+      lastStepObj.typeStep,"transferSquare", nextStepObj);
+   
+    //nextStepObj.posFigure=abc;
+    //  а есть ли на этих позициях шашки
+       if(lastStepObj.typeStep==1)
+       {checFigure(lastStepObj,nextStepObj)}
+       if(lastStepObj.typeStep==3){
+         // вызов другого  checFigureю был в legalyPos
+        // console.log(3)
+       }
+   
+     // а ходила раньше фигура
+     // можно походитьдважды, если на второй раз тоже что-то бьешь
+     if(lastStepObj.currentIDSquare == about.whoCanStep.id){
+       doubleStep(lastStepObj, nextStepObj);}
+   
+      // подсветить клетки, у которых true
+      toLightSquare(nextStepObj);
+   
+      console.log(lastStepObj);
+      console.log(nextStepObj);
+   
+       // записать цвет фигуры, для контроля хода
+    //
+    // about.whoCanStep.color=colorFigure;
+   
+      
+     document.ontouchmove = moveAtTouch;
+   
+     function moveAtTouch(EO){
+      // EO.preventDefault();
+       EO=EO|| window.event;
+     // узнать координаты клика. не скорректирванные
+     var touchInfo=EO.targetTouches[0];
+
+     var pageX=touchInfo.pageX;
+     var pageY=touchInfo.pageY;
+   
+     // узнать координаты клика с учетом утступов, скорректиров
+       var clickCoordObj= translateCoord(pageX,pageY);
   
+      var clickPageX=clickCoordObj.pageX;
+      var  clickPageY=clickCoordObj.pageY;
+       currentGigure.setAttribute("cx", clickPageX);
+       currentGigure.setAttribute("cy", clickPageY);
+       // нужна ли  эта обводка???
+       // у дамки остается белая обводка
+       if(nextStepObj.typeStep==1 ||
+         nextStepObj.typeStep==2){
+       currentGigure.setAttribute("stroke", "red");}
+       currentGigure.setAttribute('stroke-width',mainSizeWidth*0.005);
+   
+
+       currentGigure.ontouchend = function(EO) { //когда закончилось перетаскивание
+         // неудачно передавался в параметры  aboutStepObj вместе с ЕО
+         console.log(touchInfo)
+         EO=EO|| window.event;
+         EO.preventDefault();
+         // при touchend нет касания. берем последнее,которое осталось при ontouchmove
+
+        //  touchInfo=EO.targetTouches[0];
+
+          pageX=touchInfo.pageX;
+         pageY=touchInfo.pageY;
+         console.log(pageX,pageY )
+         // проверить, отпущен ли клик в нужных координатах
+         nextStepObj.result= whereMouseUp(pageX,pageY,nextStepObj, lastStepObj )
+     
+         about.whoCanStep.translate=false;
+             // записать цвет фигуры, для контроля хода
+      
+       about.whoCanStep.color=colorFigure;
+      
+               
+       if(nextStepObj.result.condition) {
+           // обрать обводку клетки и обновить массив. скорректиров глоб объекты
+         changeGameObjPosFigure(nextStepObj,lastStepObj);
+       // нарисовать красиво,  по центру эту фигуру
+       paintNiceFirure(currentGigure, nextStepObj,oldPosition);
+         
+       }
+       // если неверное перемещение - вернуть на первоначальную позицию
+       if(!nextStepObj.result.condition){
+         paintNiceFirure(currentGigure,nextStepObj,oldPosition);
+     
+       }
+       
+       // стала ли фигра дамкой. естьтакая
+      var haveKing= toBecomeKing(nextStepObj);
+      if(haveKing ){
+        console.log('рисовать корону');
+        toDrawKing(nextStepObj);
+      }
+     
+       // удалить на доске и в объекте
+       deleteFigureOnDesk(nextStepObj);
+     
+       // то,что ниже в самую последнюю очередь
+         document.onmousemove = null;
+         currentGigure.onmouseup = null;
+         nextStepObj=null;
+         lastStepObj=null;
+     
+       };
+     }
+     
+   document.ondragstart = function() {
+     
+     return false;
+     };
+    
+     // удалить все "aqua"
+     //v исключительно для тестировки
+   //  deleteAllAqua();
+   
+   
+   // проверка на  конец игры. все фигуры одного цвета остались
+     if( Object.keys(about.arrFigure).length<=22){
+      // console.log('victory');
+        console.log('победу одержала  '+victory());
+   
+         }
+   
+         console.log(about)
+   
+   }
+//------------------------------------ конец touch
+
+
+
+
+
+conteinerFigure.addEventListener('mousedown',beginerMove, false )
+var countGame=0;
+
+
+function beginerMove(EO){
+  EO=EO|| window.event;
+  console.log('следующий ход')
+
+  // сохранять следующие доступные шаги
+ // var posFigure={};
+
+  // хранить информацию про старый ход, текущий
+  var lastStepObj={};
+  // хранить про следующую позицию
+ var nextStepObj={};
+ // для записи возможно побитой фигуры
+ nextStepObj.forFightFigure={}
+ // для записи отметки дамка
+ // добавить в глобальный объект about
+ //about.king={}
 
  
-  var imgElem=document.getElementById('IBall');
-  imgElem.ontouchstart=ballTouchStart;
-  imgElem.ontouchmove=ballTouchMove;
-  imgElem.ontouchend=ballTouchEnd;
 
-  var touchShiftX=0;
-  var touchShiftY=0;
 
-  // обработчик вызывается, когда палец касается мяча
-  function ballTouchStart(EO) {
-    EO.preventDefault();
+ // для учета типа step - normal/fight/king -1/2/3
+ // первоначально все ходят нормально
+ var typeStep=1;
+ lastStepObj.typeStep=typeStep;
+ nextStepObj.typeStep=typeStep;
 
-    var touchInfo=EO.targetTouches[0];
-    // запоминаем разницу между координатами пальца и координатами мяча
-    touchShiftX=touchInfo.pageX-imgElem.offsetLeft;
-    touchShiftY=touchInfo.pageY-imgElem.offsetTop;
+  // узнать координаты клика. не скорректирванные
+  var clickPageX=EO.pageX;
+  var clickPageY=EO.pageY;
 
-    // мяч двигать не надо
+  // узнать координаты клика с учетом утступов, скорректиров
+    var clickCoordObj= translateCoord(clickPageX,clickPageY);
+    clickPageX=clickCoordObj.pageX;
+    clickPageY=clickCoordObj.pageY;
+
+  // узнать какой квадрат был выбран
+  var currentIDSquare= getIDSquare(clickPageX,clickPageY );
+  lastStepObj.currentIDSquare=currentIDSquare;
+
+  //  а это фигура есть в дамках? проверить в about.king
+ // console.log(about)
+ // console.log(currentIDSquare)
+
+  if( currentIDSquare in about.king ){
+    lastStepObj.typeStep=3;
+    nextStepObj.typeStep=3;
   }
 
-  // обработчик вызывается, когда палец уходит с мяча
-  function ballTouchEnd(EO) {
-    EO.preventDefault();
+  // сохранить первонаальную позицию. надо ли?
+  
+   var oldPosition={
+    clickPageX: about.posForSquare[currentIDSquare].posX,
+    clickPageY: about.posForSquare[currentIDSquare].posY
+  }
+  
 
-    // мяч двигать не надо
+  // координаы клика мыши
+  var currentGigure=EO.target;
+  // добавить ее в конец в DOM. проблема с Z-index решена так
+  conteinerFigure.appendChild(currentGigure);
+
+ // узнать цвет шашки и записать в оба объекта
+ var colorFigure= currentGigure.getAttribute('fill');
+ lastStepObj.colorFigure=colorFigure;
+ nextStepObj.colorFigure=colorFigure;
+
+ // записать в контроль хода. записать в процессе
+ //  about.whoCanStep.color=colorFigure;
+
+
+
+  // получить возможные,правильные клетки для хода. уже проверили
+ 
+  
+ nextStepObj.posFigure=legalyPos(lastStepObj.colorFigure,lastStepObj.currentIDSquare,
+   lastStepObj.typeStep,"transferSquare", nextStepObj);
+
+ //nextStepObj.posFigure=abc;
+ //  а есть ли на этих позициях шашки
+    if(lastStepObj.typeStep==1)
+    {checFigure(lastStepObj,nextStepObj)}
+    if(lastStepObj.typeStep==3){
+      // вызов другого  checFigureю был в legalyPos
+     // console.log(3)
+    }
+
+  // а ходила раньше фигура
+  // можно походитьдважды, если на второй раз тоже что-то бьешь
+  if(lastStepObj.currentIDSquare == about.whoCanStep.id){
+    doubleStep(lastStepObj, nextStepObj);}
+
+   // подсветить клетки, у которых true
+   toLightSquare(nextStepObj);
+
+   console.log(lastStepObj);
+   console.log(nextStepObj);
+
+    // записать цвет фигуры, для контроля хода
+ //
+ // about.whoCanStep.color=colorFigure;
+
+   
+  document.onmousemove = function(EO) {
+    moveAt(EO);
+  };
+
+  function moveAt(EO){
+    EO=EO|| window.event;
+    var pageX=EO.pageX;
+    var pageY=EO.pageY;
+    var clickCoordObj= translateCoord(pageX,pageY);
+   var clickPageX=clickCoordObj.pageX;
+   var  clickPageY=clickCoordObj.pageY;
+    currentGigure.setAttribute("cx", clickPageX);
+    currentGigure.setAttribute("cy", clickPageY);
+    // нужна ли  эта обводка???
+    // у дамки остается белая обводка
+    if(nextStepObj.typeStep==1 ||
+      nextStepObj.typeStep==2){
+    currentGigure.setAttribute("stroke", "red");}
+    currentGigure.setAttribute('stroke-width',mainSizeWidth*0.005);
+
+    
+  
+  }
+  currentGigure.onmouseup = function(EO) { //когда закончилось перетаскивание
+    // неудачно передавался в параметры  aboutStepObj вместе с ЕО
+    EO=EO|| window.event;
+    var pageX=EO.pageX;
+    var pageY=EO.pageY;
+  //  console.log(aboutStepObj)
+  //----------------------------------------------------test
+
+  // записать цвет фигуры, для контроля хода
+  //about.whoCanStep.color=colorFigure;
+
+
+    // проверить, отпущен ли клик в нужных координатах
+    nextStepObj.result= whereMouseUp(pageX,pageY,nextStepObj, lastStepObj )
+
+    about.whoCanStep.translate=false;
+
+        
+        // записать цвет фигуры, для контроля хода
+ 
+  about.whoCanStep.color=colorFigure;
+ 
+          
+  if(nextStepObj.result.condition) {
+      // обрать обводку клетки и обновить массив. скорректиров глоб объекты
+    changeGameObjPosFigure(nextStepObj,lastStepObj);
+  // нарисовать красиво,  по центру эту фигуру
+  paintNiceFirure(currentGigure, nextStepObj,oldPosition);
+    
+  }
+  // если неверное перемещение - вернуть на первоначальную позицию
+  if(!nextStepObj.result.condition){
+    paintNiceFirure(currentGigure,nextStepObj,oldPosition);
+
+  }
+  
+  // стала ли фигра дамкой. естьтакая
+ var haveKing= toBecomeKing(nextStepObj);
+ if(haveKing ){
+   console.log('рисовать корону');
+   toDrawKing(nextStepObj);
+ }
+
+  // удалить на доске и в объекте
+  deleteFigureOnDesk(nextStepObj);
+
+// canDoubleStep(lastStepObj,nextStepObj );
+  // то,что ниже в самую последнюю очередь
+   // console.log(result)
+    document.onmousemove = null;
+    currentGigure.onmouseup = null;
+    nextStepObj=null;
+    lastStepObj=null;
+
+  };
+  
+document.ondragstart = function() {
+  
+  return false;
+  };
+ 
+  // удалить все "aqua"
+  //v исключительно для тестировки
+//  deleteAllAqua();
+
+
+// проверка на  конец игры. все фигуры одного цвета остались
+  if( Object.keys(about.arrFigure).length<=22){
+   // console.log('victory');
+     console.log('победу одержала  '+victory());
+
+      }
+
+      console.log(about)
+
+}
+//------------------------------------ конец beginerMove
+
+  function getCoords(elem) {   // кроме IE8-
+  var box = elem.getBoundingClientRect();
+  return {
+    top: box.top + pageYOffset,
+    left: box.left + pageXOffset
+  };
   }
 
-  // обработчик вызывается, когда палец, прикасаясь к мячу, движется
-  function ballTouchMove(EO) {
-    EO.preventDefault();
+      // узнать какой квадрат
+ function getIDSquare(clickPageX,clickPageY ){
+  var numberArr=getNumberArr(); // для  перебора. чтобы искать  ["11", "21", "31...
+  // координата высчитывается так- знаю коорд верхнего левого угла
+  // прибавляю размеры квадрата игрового. если клик в этом диапазоне- гуд
+      for(var i=0; i<=numberArr.length-1; i++){
+    var posXForSearch=about.posForSquare[numberArr[i]].posX;
+      if(posXForSearch<=clickPageX && clickPageX<=posXForSearch+sizeForGameSquare){
+        var posYForSearch=about.posForSquare[numberArr[i]].posY;
+          if(posYForSearch<=clickPageY && clickPageY<=posYForSearch+sizeForGameSquare )
+        return numberArr[i];
+      }
+  }
+ }
+    // проверка хоа. есть ли на этих клетках другие шашки. еще на двойной ход сделать
+    // ее дописать
+  function checFigure(lastStepObj,nextStepObj){
+    var posFigure={}
+        //какие позиции предлагает
+        // вернуть нормальный тип хода
+      //  lastStepObj.typeStep==1;
+    // массив из допустимых ходов
+    var posForStepArr=Object.keys(nextStepObj.posFigure);
+  //  console.log(nextStepObj.posFigure)
 
-    // двигаем мяч
-    // его новые координаты есть координаты касания минус запомненная разница
-    var touchInfo=EO.targetTouches[0];
-    imgElem.style.left=(touchInfo.pageX-touchShiftX)+"px";
-    imgElem.style.top=(touchInfo.pageY-touchShiftY)+"px";
+    // есть ли на этих позициях шашки
+    /*
+    if(lastStepObj.typeStep==3){
+      console.log('typeStep=3')
+      // другая  checFigure для  king
+      return;
+    }
+    */
+    for( var i=0; i<=posForStepArr.length-1; i++){
+      if (posForStepArr[i] in about.arrFigure  ){
+      //  console.log(posForStepArr[i])
+
+              // если шашка такого же цвета
+              // 2 позиции. стандартные. +1 клетка в стороны
+
+              // стоит фигура на этой клетке такого же цвета
+
+        if(about.arrFigure[posForStepArr[i]].color==nextStepObj.colorFigure){
+          nextStepObj.posFigure[posForStepArr[i]].condition=false;
+        }
+        // если шашка другого цвета,то подсветить на клетку больше
+        
+        else if( about.arrFigure[posForStepArr[i]].color!=nextStepObj.colorFigure ){
+          // не подходит  эта позиция, зафиксировать
+          lastStepObj.typeStep=2;
+
+          nextStepObj.posFigure[posForStepArr[i]].condition=false;
+
+
+          // узнать другую позицию. следующую
+
+          // здесь новая позиция. а есть ли здесь фигура
+         var posFigure= legalyPos(lastStepObj.colorFigure,lastStepObj.currentIDSquare,
+             lastStepObj.typeStep,posForStepArr[i],nextStepObj );
+           //  console.log(posFigure)
+
+             // вернул одну позицию. узнать ключ
+             var nextForStep=Object.keys(posFigure);
+            // console.log(posFigure)
+
+             if((nextForStep[0] in about.arrFigure)!=true ){
+               // если нет фигуры. нужна эта позиция
+               nextStepObj.posFigure[nextForStep[0]]={condition:true};
+               // записать для nextStepObj.forFightFigure  в значении-куда надо встать,чтобы убрать
+               
+
+               nextStepObj.forFightFigure[nextForStep[0]]=posForStepArr[i] ;
+
+             //  nextStepObj.forFightFigure[posForStepArr[i]]={[nextForStep[0]]:true} ;
+
+             }
+        }
+      }
+    }
+   // return aboutStepObj;
+   //lastStepObj.typeStep=1;
+  }
+
+    // узнать клетки, куда могу ходить
+
+   function legalyPos(colorFigure, currentIDSquare,typeStep, transferSquare,nextStepObj){
+     var forNextStep=[];
+     // перевод в число
+     transferSquare=+transferSquare;
+     currentIDSquare=+currentIDSquare;
+     // надо ли тут posFigure.по идее - да
+     var posFigure={};
+    // удалить опредыдущем  ходе, если другой цвет
+     if(about.whoCanStep.color!= colorFigure){
+      about.whoCanStep.id=true;
+     }
+     
+     // если цвета совпадают. повторный ход недопустить (но если бил  до этого - нужно пропустить)
+     //одинаковые цвета?
+     // била до этого?
+     // от случайных ходов не спасает.
+     console.log(about)
+
+     if((about.whoCanStep.color== colorFigure && currentIDSquare!=about.whoCanStep.id &&
+      about.whoCanStep.translate==true ) 
+   ){
+      posFigure[currentIDSquare]={condition:true};
+      console.log('вы уже ходили ')
+      return posFigure;
+
+
+     }
+     
+
+    // узнать клетки, куда могу ходить
+    // обычный ход
+       if(typeStep==1)   {
+    if(colorFigure=='magenta'){
+      forNextStep.push(currentIDSquare-10+1, currentIDSquare+10+1);
+    }
+
+    if(colorFigure=='aqua'){
+      forNextStep.push(currentIDSquare-10-1, currentIDSquare+10-1);
+    }
+  }
+//--------------------------------
+// вызов из checkFigure
+    if(typeStep==2 ){
+     // console.log('currentIDSquare')
+
+      if(colorFigure=='magenta'){
+        // в левую сторону
+        if(transferSquare<currentIDSquare ){
+        forNextStep.push(currentIDSquare-20+2);}
+        // в правуюсторону
+        if(transferSquare>currentIDSquare ){
+          forNextStep.push(currentIDSquare+20+2);}
+
+        }
+        // другой цвет фигуры
+      if(colorFigure=='aqua'){
+        if(transferSquare<currentIDSquare){
+          forNextStep.push(currentIDSquare-20-2);
+       }
+        if(transferSquare> currentIDSquare)
+          forNextStep.push( currentIDSquare+20-2);
+        }
+      }
+// ходит дамка
+
+      if(typeStep==3){
+        // изменяются  клетки  -9 +9 -11 +11
+        forNextStep= forNextStep.concat(  (toFindPosForKing(currentIDSquare, 9,colorFigure,nextStepObj )) )
+        console.log(forNextStep)
+        console.log(nextStepObj)
+
+        // здесь  хорошо проверять. разбито по 4-ем направлениям
+
+        forNextStep= forNextStep.concat((toFindPosForKing(currentIDSquare, -9,colorFigure,nextStepObj )))
+
+        forNextStep= forNextStep.concat((toFindPosForKing(currentIDSquare, 11,colorFigure ,nextStepObj)))
+
+        forNextStep= forNextStep.concat((toFindPosForKing(currentIDSquare, -11,colorFigure ,nextStepObj)))
+
+       // console.log(forNextStep)
+    }
+
+    //вернуть адекватные значения
+    // если выходит за рамки, вписать текущее
+    // можно ли  эту запись сделать красивее?
+     forNextStep.filter((v)=>{if(10<v && v<89 && v!=20 && v!=30 &&
+    v!=40 && v!=50 && v!=60 && v!=70 && v!=80 && v!=19 && v!=29 &&
+    v!=39 && v!=49 && v!=59 && v!=69 && v!=79 ){posFigure[v]={condition:true} } });
+    // узнать есть ли там вообще допустимые значения
+    var forLenghtPosFigure=Object.keys(posFigure);
+    if (forLenghtPosFigure.length==0){
+      // если был пуст, записать предыдущую позицию
+      posFigure[currentIDSquare]={condition:true}
+    }
+    // не  вносить изменения  в глоб объект nextStepObj
+    /*
+    if(typeStep==2){
+      return posFigure;
+
+    }
+    */
+    // записать глобально
+  //  nextStepObj.posFigure=posFigure;
+   return posFigure;
+   }
+
+   function doubleStep(lastStepObj, nextStepObj){
+     //фигуры побитые есть при возможных ходах
+     var forFight=Object.keys(nextStepObj.forFightFigure)
+    // есть ли эта фигра/клетка в записи  whoCanStep
+    if((lastStepObj.currentIDSquare == about.whoCanStep.id) &&
+    forFight.length!=0 ){
+    //  console.log('верный ход')
+
+    }
+    else {
+      //console.log('неверный ход. обработать');
+    //если нечего бить, то в каждую допустимую позицию для хода condition=false
+    // и ходить некуда
+    var badPos=Object.keys(nextStepObj.posFigure);
+   // console.log(badPos)
+
+    for(var i=0; i<=badPos.length-1; i++){
+      nextStepObj.posFigure[badPos[i]].condition=false;
+    }
+}
+   }
+
+
+// функция для посиска клеток для дамки
+  function toFindPosForKing(currentIDSquare, changeNumber, colorFigure,nextStepObj ){
+    var saveCurrentIDSquare=currentIDSquare;
+    var arr=[]
+    while(saveCurrentIDSquare>10 && saveCurrentIDSquare<89 ){
+      saveCurrentIDSquare=saveCurrentIDSquare+changeNumber;
+      // если выполняется условие
+       // проверка на допустимые значения
+       // и есть ли такая клетка вообще
+      if( saveCurrentIDSquare>10 && saveCurrentIDSquare<89 &&
+        (saveCurrentIDSquare in about.posForSquare)==true   ){
+          // если она существует, то проверим, где на пути первая фигура
+
+          if(saveCurrentIDSquare in about.arrFigure  ){
+            // вынести информацию по этой фигуре
+           var fistFigureByWay=about.arrFigure[saveCurrentIDSquare];
+           // проверить цвета. свой или нет
+              if(fistFigureByWay.color==colorFigure){
+              // совпадают. нет смысла считать дальше. не добавлять в массив
+              return arr;
+               }
+          // если не совпадают цвета - вернуть на позицию больше и уйти из функции
+          // но проверить что на следующей клетке, есть ли фигура
+          // saveCurrentIDSquare+changeNumber+changeNumber
+              else if(fistFigureByWay.color!=colorFigure )        {
+                               
+                // следующая клетка
+                var abc=saveCurrentIDSquare+changeNumber;
+                // чтобы избежать в nextStepObj.forFightFigure --> 20:31
+                // несуществующая ячейка
+
+                if( !(abc in about.posForSquare )){
+                  return arr;
+                }
+                // если есть, выход
+                else if(abc in about.arrFigure ){
+                  return arr;
+                }
+               
+            // проверить следующую клетку
+          // добавить к тем, которые можно бить
+          console.log(nextStepObj)
+         // nextStepObj.forFightFigure={[saveCurrentIDSquare]: true}
+                
+          nextStepObj.forFightFigure[abc]=saveCurrentIDSquare ;
+            arr.push(saveCurrentIDSquare+changeNumber);
+            return arr;
+              }
+          
+          }
+
+       // добавить
+       arr.push(saveCurrentIDSquare);
+
+      }
+      // иначе выход
+      else  saveCurrentIDSquare=0;
+  }
+ // console.log(arr)
+return arr;
   }
 
 
+   // в пределах ли клетка поля находится
+
+        // подсветить клетки, у которых true
+   function toLightSquare(nextStepObj){
+        // подсветить клетки, у которых true
+        var squareIDForAttention=Object.keys(nextStepObj.posFigure);
+        // console.log(squareIDForAttention)
+     
+         for(var i=0; i<=squareIDForAttention.length-1; i++){
+           if(nextStepObj.posFigure[squareIDForAttention[i]].condition==true ){
+           elem=document.getElementById(squareIDForAttention[i]);
+           if(elem==null){
+           return }
+     
+           elem.setAttribute('stroke','red');
+           elem.setAttribute('stroke-width',mainSizeWidth*0.005);
+
+          }
+         }
+         
+       // дописать координаты этих клеток. а нужно ли?
+         for( var j=0; j<=squareIDForAttention.length-1; j++){
+          nextStepObj.posFigure[squareIDForAttention[j]].posX=
+           about.posForSquare[squareIDForAttention[j]].posX;
+           nextStepObj.posFigure[squareIDForAttention[j]].posY=
+           about.posForSquare[squareIDForAttention[j]].posY;
+         }
+   }
+
+   function translateCoord(pageX,pageY){
+      // получить размеры дива для svg элемента
+  var widthConteinerDiv=gameDiv.offsetWidth;
+  var offsetLeftGameDiv=gameDiv.offsetLeft;
+  var offsetTopGameDiv=gameDiv.offsetTop;
+  // пересчет масштаба с учетом поправки/корректировки
+var delta=widthConteinerDiv/mainSizeWidth;
+  // узнать координаты клика с учетом утступов
+ var   clickPageX=(pageX-offsetLeftGameDiv)/delta;
+  var  clickPageY=(pageY-offsetTopGameDiv)/delta;
+  return {
+    pageX: clickPageX,
+    pageY: clickPageY
+  }
+   }
+
+   // проверить, отпущен ли клик в нужных координатах
+   function whereMouseUp(pageX,pageY,nextStepObj, lastStepObj ){
+     // получить скорректиров координ
+    var clickCoordObj= translateCoord(pageX,pageY);
+    var clickPageX=clickCoordObj.pageX;
+    var  clickPageY=clickCoordObj.pageY;
+    // проверка где отпущен  клик
+    var squareIDForAttention=Object.keys(nextStepObj.posFigure);
+    //console.log(squareIDForAttention )
+    for(var i=0; i<=squareIDForAttention.length-1; i++){
+
+    if(nextStepObj.posFigure[squareIDForAttention[i]].condition==true ){
+      if(clickPageX>= nextStepObj.posFigure[squareIDForAttention[i]].posX &&
+         clickPageX<=nextStepObj.posFigure[squareIDForAttention[i]].posX+sizeForGameSquare &&
+         clickPageY>= nextStepObj.posFigure[squareIDForAttention[i]].posY &&
+         clickPageY<=nextStepObj.posFigure[squareIDForAttention[i]].posY+sizeForGameSquare
+        ){
+          return {condition:true,
+                  newPositionID:squareIDForAttention[i]   } 
+     // else return false;
+    }
+   else continue;
+  }
+   }
+   // эту ошибку обработать.более точно
+   //отпущен клик не в подсвеченных элементах
+   console.log('клик не в новом квадрате отпущен');
+   deleteStrokeOnFigure(nextStepObj);
+  // about.whoCanStep.color=true;
+  // неосторожный  ход. дать еще один шанс
+  /*
+  //реализовано в дополнит функции canDoubleStep
+  //----------------------------------------------------------------
+if(lastStepObj.currentIDSquare in nextStepObj.posFigure){
+  
+ // console.log('eeee')
+   about.whoCanStep.color=true;
+}
 */
+  return {condition:false,
+          newPositionID:false} }
+
+
+  //красиво нарисовать в центре
+   function   paintNiceFirure(figureDOM, nextStepObj,oldPosition){
+    // для более удобного  доступа
+    var newPositionID =nextStepObj.result.newPositionID
+   // console.log(newPositionID);
+     //если хреново передвинули. оставили не там
+     if(nextStepObj.result.newPositionID==false ){
+      var PageX=oldPosition.clickPageX+sizeForGameSquare/2;
+      var PageY=oldPosition.clickPageY+sizeForGameSquare/2;
+   
+      figureDOM.setAttribute("cx", PageX);
+      figureDOM.setAttribute("cy", PageY);
+      return;
+
+     }
+   // координ верхнего левого угла клетки игровой
+   var posX=nextStepObj.posFigure[newPositionID].posX;
+   var posY=nextStepObj.posFigure[newPositionID].posY;
+   // в середине будет с учетомполовины клетки
+    PageX=posX+sizeForGameSquare/2;
+    PageY=posY+sizeForGameSquare/2;
+
+   figureDOM.setAttribute("cx", PageX);
+   figureDOM.setAttribute("cy", PageY);
+   }
+
+     // убрать обводку клетки и обновить массив. скорректиров глоб объекты
+    function changeGameObjPosFigure(nextStepObj,lastStepObj){
+          // подсветить клетки, у которых true
+    var squareIDForAttention=Object.keys(nextStepObj.posFigure);
+    // console.log(squareIDForAttention)
+ var newPositionID =nextStepObj.result.newPositionID
+     for(var i=0; i<=squareIDForAttention.length-1; i++){
+       if(nextStepObj.posFigure[squareIDForAttention[i]].condition==true ){
+       elem=document.getElementById(squareIDForAttention[i]);
+       elem.setAttribute('stroke','black');}
+     }
+ // перезаписать положение с учетом перемещения клетки
+ // какой цвет был
+    var whichColorWas= about.arrFigure[lastStepObj.currentIDSquare];
+    // console.log(newPositionID);
+    // var abc=lastStepObj.currentIDSquare
+  //   console.log(about.arrFigure[11]);
+
+     delete about.arrFigure[lastStepObj.currentIDSquare];
+
+     // а были перемещения фигур на игровом поле верные, тогда  true и ходит следующий
+    
+    about.whoCanStep.translate=true;
+    
+
+     // записать новый
+     about.arrFigure[newPositionID]=whichColorWas;
+     // скорректировать king
+     if(lastStepObj.typeStep==3){
+      //  была ли эта позиция раньше в массиве 
+         if  (lastStepObj.currentIDSquare in about.king){
+           //  значение ключа для этой позиции(цвет, id)
+           var newPosForKing=about.king[lastStepObj.currentIDSquare];
+            //удалить
+           delete about.king[lastStepObj.currentIDSquare ]
+           //записать новую
+           about.king[nextStepObj.result.newPositionID]=newPosForKing;
+         }
+     }
+
+    }
+ 
+// убрать обводку
+ function deleteStrokeOnFigure(nextStepObj){
+        var squareIDForAttention=Object.keys(nextStepObj.posFigure);
+      // console.log(squareIDForAttention)
+         
+      for(var i=0; i<=squareIDForAttention.length-1; i++){
+      if(nextStepObj.posFigure[squareIDForAttention[i]].condition==true ){
+    elem=document.getElementById(squareIDForAttention[i]);
+    if(elem==null){
+    return false;}
+     elem.setAttribute('stroke','black');}
+             }
+ }
+
+ // стала ли дамкой фигура
+function toBecomeKing (nextStepObj){
+  // если дошла фигура до крайних клеток - это вторая цифра=1 или8
+  // узнать позицию, куда в итоге стала фигура
+ var newPos= nextStepObj.result.newPositionID;
+ //переводв строку
+ var posStr=newPos+'';
+  if(posStr[1]==1 || posStr[1]==8) { 
+     if((nextStepObj.colorFigure=='magenta' && posStr[1]==8) ||
+      (nextStepObj.colorFigure=='aqua' && posStr[1]==1  )  ){
+        nextStepObj.king={[newPos]:nextStepObj.colorFigure }
+        // записать данные в глоб объект, чтобы и в след ход видеть кто дамка
+        // позиция на поле, цвет, ее id
+        var abc={};
+         abc=nextStepObj.result.newPositionID;
+        about.king[abc]={color: nextStepObj.colorFigure,
+          id: about.arrFigure[nextStepObj.result.newPositionID].id
+        }
+    console.log('king')
+    console.log(about)
+
+      return true;
+    }
+  }
+  return false;
+}
+
+function toDrawKing(nextStepObj){
+  
+
+  var whoIsKing=Object.keys(nextStepObj.king); //["68"] всегда одно значение, текущее
+  console.log(whoIsKing);
+  // найти квадрат, куда стала
+  var elemToSquare=nextStepObj.result.newPositionID;
+// узнать id фигуры, что стоит там. сделать белый ободок
+  var elemKing=document.getElementById(about.arrFigure[elemToSquare].id);
+  elemKing.setAttribute('stroke-width',mainSizeWidth*0.008);
+  elemKing.setAttribute('stroke','white');
+}
+
+function canDoubleStep(lastStepObj,nextStepObj ){
+  //не было впринципе корректного хода
+  if(nextStepObj.result.condition==false){
+    about.whoCanStep.color=true;
+  }
+
+}
+
+
+// удаляю фигуру с доски и удаляю из  about.arrFigure
+
+ function deleteFigureOnDesk(nextStepObj){
+
+
+
+
+  var checForFight=Object.keys(nextStepObj.forFightFigure);
+  // проверка, есть ли что бить
+  //  console.log(checForFight)
+    if(checForFight.length==0 || nextStepObj.result.newPositionID==false ){
+      return;
+    }
+    // когда игноришь,что нужно бить
+    
+    if( nextStepObj.result.newPositionID!=checForFight[0] &&
+      //если возращается 2 варианта, то не выбирать постоянн второй. нужно для этого усл. ниже
+      checForFight.length==1){
+      return;
+    }
+
+    
+   var deleteThisFigure=nextStepObj.forFightFigure[nextStepObj.result.newPositionID];
+  // console.log(deleteThisFigure)
+
+   var deleteFigureID=about.arrFigure[deleteThisFigure].id;
+    console.log(deleteFigureID)
+     var elem=document.getElementById(deleteFigureID);
+
+   // фигура побита. значит эта фигура может ходить еще раз. записать ее данныею в какой  клетке
+   var plusStep=nextStepObj.result.newPositionID;
+  // var plusStep=about.arrFigure[nextStepObj.result.newPositionID].id;
+
+   about.whoCanStep.id=plusStep;
+   console.log(about)
+
+
+
+
+     // тестовый подсчет очков
+     countGame++;
+      elem.setAttribute('class','aaa');
+   //запланировать удаление
+    setTimeout (function() { elem.setAttribute('display','none');  }, 1000);
+   
+   console.log(countGame)
+// удалить из глобального объекта
+ delete about.arrFigure[deleteThisFigure]
+
+ // проверка ее в king
+ if(deleteThisFigure in about.king){
+   delete about.king[deleteThisFigure]
+   console.log('del king')
+ }
+ }
+
+ // закончилась ли игра?
+ // определить победителя
+ function victory() {
+
+  var arrOfColor=Object.keys(about.arrFigure);
+
+  // если все одинаковые цвета остались,сообщить о победе
+   function whichColorMagenta(v,i,a){
+    
+       return v="magenta";}
+
+     function whichColorAqua(v,i,a){
+    
+     return v="aqua";}
+    
+      // кто первый даст true, тот и выиграл
+   var answerMagenta=arrOfColor.every(whichColorMagenta);
+   var answerAqua=arrOfColor.every(whichColorAqua);
+
+  if(answerMagenta==true){
+    return "magenta";
+  }
+  if(answerAqua==true){
+    return "aqua";
+  }
+
+ }
+
+ function deleteAllAqua(){
+   var allAquaArr=Object.keys(about.arrFigure);
+   console.log(allAquaArr);
+   for(var i=0; i<=allAquaArr.length-1; i++){
+    if(about.arrFigure[allAquaArr[i]].color=="aqua"){
+      delete about.arrFigure[allAquaArr[i]];
+    }
+
+
+   }
+ }
+
+
