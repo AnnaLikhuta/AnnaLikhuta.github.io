@@ -278,7 +278,15 @@ var conteinerFigure= document.getElementById('figure');
    function beginerMoveForTouch(EO){
      EO=EO|| window.event;
      EO.preventDefault();
+   // если касается двумя пальцами и больше
+      if(EO.touches.length>1){
+        return false;
+      }
 
+        // если касается двумя пальцами и больше
+        if(EO.touches.length==1){
+          console.log('one touch')
+        }
      console.log('следующий ход')
    
      // хранить информацию про старый ход, текущий
