@@ -195,9 +195,3 @@ timeElem.innerHTML='';
  return recordsStorage.objInfo[a].inNumberTime-recordsStorage.objInfo[b].inNumberTime;
 
  }
-
-function catchBadClick(){
-   
-console.log('ловушка')
-   
-}

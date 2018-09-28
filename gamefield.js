@@ -630,8 +630,11 @@ var conteinerFigure= document.getElementById('figure');
 
         if(nextStepObj.result.condition==true){
           gameAudio.play();
+          vibro(true);
+
           }
         
+
           
           // проверка на победу
 // проверка на  конец игры. все фигуры одного цвета остались
@@ -650,8 +653,8 @@ if( Object.keys(about.arrFigure).length<=22){   //14
 
      
        // то,что ниже в самую последнюю очередь
-         document.onmousemove = null;
-         currentGigure.onmouseup = null;
+         document.ontouchmove = null;
+         currentGigure.ontouchend = null;
          nextStepObj=null;
          lastStepObj=null;
      
@@ -1651,5 +1654,26 @@ function canDoubleStep(lastStepObj,nextStepObj ){
     
    }
  }
+
+ // вибрация на мобильном
+ function vibro(longFlag) {
+  if ( navigator.vibrate ) { // есть поддержка Vibration API?
+      if ( !longFlag )
+          window.navigator.vibrate(100); // вибрация 100мс
+      else
+          window.navigator.vibrate(100); // вибрация 3 раза по 100мс с паузами 50мс
+  }
+}
+
+
+
+
+
+
+
+
+
+
+
 
 }

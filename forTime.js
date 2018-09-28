@@ -55,13 +55,9 @@ function updateTime() {
 
       // кто  забил, или active
       // убрать обводку  модального  окна
+      ElemPlayer1.classList.remove('active')
+      ElemPlayer2.classList.remove('active')
 
-      if(player1.active==true){
-        ElemPlayer1.classList.remove('active')
-        }
-        else{
-        ElemPlayer2.classList.remove('active')
-        }
     
 
       
