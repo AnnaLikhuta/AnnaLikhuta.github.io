@@ -1,3 +1,85 @@
+   //  найти объекты по ID
+var ElemPlayer1=document.getElementById('conteiner_player1');
+var ElemPlayer2=document.getElementById('conteiner_player2');
+
+// запись очков
+var countElemPlayer1=document.getElementById('first_player_count');
+var countElemPlayer2=document.getElementById('second_player_count');
+
+// запись цвета
+var colorPlyer1=document.getElementById('first_player_color');
+var colorPlyer2=document.getElementById('second_player_color');
+
+// ввод имен поля когда играешь
+var firstElem=document.getElementById('first_player');
+var secondElem=document.getElementById('second_player');
+
+    var timeElem=document.getElementById('time');
+    var buttonStartTime=document.getElementById('closeModal');
+
+    // для таблицы рекордов. запись результатов
+
+var recordsPlayer1=document.getElementById('recordsPlayer1')
+var recordsPlayer2=document.getElementById('recordsPlayer2')
+var recordsPlayer3=document.getElementById('recordsPlayer3')
+
+
+
+
+   // var winner;
+    var winner={name:false,
+      stringTime: true,
+      inNumberTime:0,
+      color: false
+    }
+
+    var player1,player2;
+    var numberArr;
+// найти containerModalWindow
+var containerForStartModal= document.getElementById('containerModalWindow');
+
+// создавать и вставлять во внутрь нужные элементы
+// затем анимировать. красиво выезжать
+
+var buttonModal=document.getElementById('modal_button');
+var modal=document.getElementById('modal-container');
+var closeModal=document.getElementById('closeModal');
+// поля ввода имен в модальном окне
+
+var firstPlayerElem=document.getElementById('firstPlayer');
+var secondPlayerElem=document.getElementById('secondPlayer');
+
+
+    //чтоб закрыть окно модальное просто
+var modalCloseElem=document.getElementById('modal_background');
+
+  // источник звука
+  var gameAudio=new Audio('sound.mp3');
+
+   // модальное окно для победителя
+   var modalWinner=document.getElementById('modal-container-winner');
+    //чтоб закрыть окно модальное просто
+    var modalWinnerClose=document.getElementById('modal_background_winner');
+    var infoAboutWinner=document.getElementById('infoAboutWinnerElem');
+
+   //  кнопки сверху
+
+   var buttonNewGame=document.getElementById('newGame');
+   // правила игры
+   var buttonRulesOfGame=document.getElementById('rules');
+
+   var modalRules=document.getElementById('modal-container-rules');
+   var modalRulesClose=document.getElementById('modal_background_rules');
+// таблица рекордов
+var buttonRecords=document.getElementById('records');
+
+var modalRecords=document.getElementById('modal-container-records');
+var modalRecordsClose=document.getElementById('modal_background_records');
+
+// где сама игра
+var elemForInserch=document.getElementById('game_field')
+
+   
    //основные размеры
    // в идеале в них записывать реальные  размеры GameDiv
    var mainSizeWidth=1000;
@@ -8,277 +90,373 @@
    //радиус круга для шашки
    var figureRadius=sizeForGameSquare*0.3
 
+   //--------------------------------------------  создать программно
+   startBaby() ;
+ function startBaby()   { 
+       var gameDiv=document.createElement('div');
+      var elemForInserch=document.getElementById('game_field')
+      elemForInserch.appendChild(gameDiv)
 
-   //---  создать программно
-  var gameDiv=document.createElement('div');
-  document.body.appendChild(gameDiv)
+      gameDiv.className='gameDiv';
+      gameDiv.id='gameDiv';
+      var start= document.createElementNS('http://www.w3.org/2000/svg', 'svg'); 
+      start.setAttribute("id", 'start');
+      gameDiv.appendChild(start);
 
-  gameDiv.className='gameDiv';
-  gameDiv.id='gameDiv';
-  var start= document.createElementNS('http://www.w3.org/2000/svg', 'svg'); 
-  start.setAttribute("id", 'start');
-   gameDiv.appendChild(start);
+    // если оставлять этот вариант, то див и свг  создать в html
+      // получить див, куда вставлять svg-игровое поле
+    // var gameDiv=document.getElementById('gameDiv');
+        // создать svg поле. резиновые размеры
+      // start= document.createElementNS('http://www.w3.org/2000/svg', 'svg'); 
+    //  var start=document.getElementById('start')
+        start.setAttribute('viewBox','0 0'+' '+mainSizeWidth+' '+mainSizeHeight)
+      start.style.width='100%';
+      start.style.height='100%';
 
-// если оставлять этот вариант, то див и свг  создать в html
-  // получить див, куда вставлять svg-игровое поле
- // var gameDiv=document.getElementById('gameDiv');
-    // создать svg поле. резиновые размеры
-  // start= document.createElementNS('http://www.w3.org/2000/svg', 'svg'); 
-//  var start=document.getElementById('start')
-    start.setAttribute('viewBox','0 0'+' '+mainSizeWidth+' '+mainSizeHeight)
-   start.style.width='100%';
-   start.style.height='100%';
+      start.style.maxHeight='80vw';
+      start.style.maxWidth='80vw';
+      start.style.minHeight='30vh';
+      start.style.minWidth='30vh';
 
-  start.style.maxHeight='80vw';
-  start.style.maxWidth='80vw';
-  start.style.minHeight='20vh';
-  start.style.minWidth='20vh';
-
-   start.style.display='block';
+      start.style.display='block';
 
 
- // создать большой фоновый квадрат
-   
- var bigRect= document.createElementNS('http://www.w3.org/2000/svg', 'rect');
- bigRect.setAttribute("x", 0);
- bigRect.setAttribute("y", 0);
- bigRect.setAttribute("width",mainSizeWidth);
- bigRect.setAttribute("height",mainSizeHeight );
-
- bigRect.setAttribute("fill", "aqua");
- start.appendChild(bigRect);
- //gameDiv.appendChild(start);
-
-   // массив для клеток
-   function getNumberArr(){
-    var numberArr=[],pos;  
-    for (var j=1; j<=8; j++){
-      for(var i=1; i<=8; i++) {
-       pos=i+''+j+'';
-      numberArr.push(pos) }
-    }
-    return numberArr; }
-    
- var numberArr=getNumberArr(); // для  перебора. чтобы искать  ["11", "21", "31...
-  //console.log(numberArr)
- 
- 
-      // для отрисовки квадратов. базовая точка
-   function createGameBigSquare(){
-    var letterArr=[]
-     var white=[];
-     var black=[];
-    var countForArr=0;
-    var objPos={}
-     var x=sizeSmallSquareCornerWidth/2;
-     var y=sizeSmallSquareCornerWidth/2;
-     var chec=1; // начинаем с черного цвета, если 0
-                  // с белого, если 1
-                    // сверху вниз все начинаетс  "A8", "B8", "C8"...
-    var groupCircle= document.createElementNS('http://www.w3.org/2000/svg','g');
-    groupCircle.setAttribute("id", 'squareElem');
-
-      for(var j=8; j>=1; j--) {
-        for(var i=1; i<=8; i++){ //для столбца
-          var gameRect= document.createElementNS('http://www.w3.org/2000/svg', 'rect');
-          
-          gameRect.setAttribute("x", x);
-          gameRect.setAttribute("y", y);
-          gameRect.setAttribute("width",sizeForGameSquare);
-          gameRect.setAttribute("height",sizeForGameSquare );
-            // вписать id каждой клетке
-            pos= i+''+j+'';
-          gameRect.setAttribute("id", pos);
-          //добавляем в массив
-          letterArr.push(pos)
-          // координаты каждой клетки
-          objPos[letterArr[countForArr]]={posX: x,
-                                            posY:y};
-          if(chec==0){  // субпиксильноепозиционирование . видны зазоры
-            gameRect.setAttribute("fill", "black");
-            black.push( letterArr[countForArr])
-            chec=1;
-          }
-          else {
-            gameRect.setAttribute("fill", "white");
-            chec=0;
-            white.push( letterArr[countForArr])
-          }
-          countForArr++;
-          groupCircle.appendChild(gameRect);
-          x+=sizeForGameSquare;
-        
-        }
-        // для строчного  отображения
-        // чтоб правильно чередовались цвета
-        if(chec==0){
-          chec=1;
-        }
-        else chec=0;
-
-        x=sizeSmallSquareCornerWidth/2; // обнулить, вернуть коорд по Х
-       y+=sizeForGameSquare;  // нарастание по оси У
-      }
-      start.appendChild(groupCircle);
+    // создать большой фоновый квадрат
       
-    //  console.log(objPos )
-    // console.log('black '+blackCell )
-    // console.log('white '+whiteCell )
-      return {
-        blackCell: black,
-        whiteCell: white,
-        posForSquare :objPos
+    var bigRect= document.createElementNS('http://www.w3.org/2000/svg', 'rect');
+    bigRect.setAttribute("x", 0);
+    bigRect.setAttribute("y", 0);
+    bigRect.setAttribute("width",mainSizeWidth);
+    bigRect.setAttribute("height",mainSizeHeight );
+
+    bigRect.setAttribute("fill", "aqua");
+    start.appendChild(bigRect);
+    //gameDiv.appendChild(start);
+
+      // массив для клеток
+      function getNumberArr(){
+        var numberArr=[],pos;  
+        for (var j=1; j<=8; j++){
+          for(var i=1; i<=8; i++) {
+          pos=i+''+j+'';
+          numberArr.push(pos) }
+        }
+        return numberArr; }
+        
+    var numberArr=getNumberArr(); // для  перебора. чтобы искать  ["11", "21", "31...
+      //console.log(numberArr)
+    
+    
+          // для отрисовки квадратов. базовая точка
+      function createGameBigSquare(){
+        var letterArr=[]
+        var white=[];
+        var black=[];
+        var countForArr=0;
+        var objPos={}
+        var x=sizeSmallSquareCornerWidth/2;
+        var y=sizeSmallSquareCornerWidth/2;
+        var chec=1; // начинаем с черного цвета, если 0
+                      // с белого, если 1
+                        // сверху вниз все начинаетс  "A8", "B8", "C8"...
+        var groupCircle= document.createElementNS('http://www.w3.org/2000/svg','g');
+        groupCircle.setAttribute("id", 'squareElem');
+
+          for(var j=8; j>=1; j--) {
+            for(var i=1; i<=8; i++){ //для столбца
+              var gameRect= document.createElementNS('http://www.w3.org/2000/svg', 'rect');
+              
+              gameRect.setAttribute("x", x);
+              gameRect.setAttribute("y", y);
+              gameRect.setAttribute("width",sizeForGameSquare);
+              gameRect.setAttribute("height",sizeForGameSquare );
+                // вписать id каждой клетке
+                pos= i+''+j+'';
+              gameRect.setAttribute("id", pos);
+              //добавляем в массив
+              letterArr.push(pos)
+              // координаты каждой клетки
+              objPos[letterArr[countForArr]]={posX: x,
+                                                posY:y};
+              if(chec==0){  // субпиксильноепозиционирование . видны зазоры
+                gameRect.setAttribute("fill", "black");
+                black.push( letterArr[countForArr])
+                chec=1;
+              }
+              else {
+                gameRect.setAttribute("fill", "white");
+                chec=0;
+                white.push( letterArr[countForArr])
+              }
+              countForArr++;
+              groupCircle.appendChild(gameRect);
+              x+=sizeForGameSquare;
+            
+            }
+            // для строчного  отображения
+            // чтоб правильно чередовались цвета
+            if(chec==0){
+              chec=1;
+            }
+            else chec=0;
+
+            x=sizeSmallSquareCornerWidth/2; // обнулить, вернуть коорд по Х
+          y+=sizeForGameSquare;  // нарастание по оси У
+          }
+          start.appendChild(groupCircle);
+          
+        //  console.log(objPos )
+        // console.log('black '+blackCell )
+        // console.log('white '+whiteCell )
+          return {
+            blackCell: black,
+            whiteCell: white,
+            posForSquare :objPos
+          }
       }
-   }
 
-   // разбивка клеток по цветам
-   // глобалный объект с важной информацией
-  var about= createGameBigSquare();
-      console.log(about )
+      // разбивка клеток по цветам
+      // глобалный объект с важной информацией
+      var about= createGameBigSquare();
+          console.log(about )
 
-   //вставить прямоугольники с подписями
+      //вставить прямоугольники с подписями
 
-   function createReactWithText(){
-     //начальное положение
-     // для вертикального текста
-     var groupCircle= document.createElementNS('http://www.w3.org/2000/svg','g')
-     groupCircle.setAttribute("id", 'textInfo');
+      function createReactWithText(){
+        //начальное положение
+        // для вертикального текста
+        var groupCircle= document.createElementNS('http://www.w3.org/2000/svg','g')
+        groupCircle.setAttribute("id", 'textInfo');
 
-    var y=sizeSmallSquareCornerWidth+sizeForGameSquare/8; // 8- количество  больших квадратов
-    var x=sizeSmallSquareCornerWidth/4; // /2 их 2 штуки и еще/2 чтобысередина была
-    for(var i=8; i>=1; i--){
-    var txt=document.createElementNS("http://www.w3.org/2000/svg",'text');
+        var y=sizeSmallSquareCornerWidth+sizeForGameSquare/8; // 8- количество  больших квадратов
+        var x=sizeSmallSquareCornerWidth/4; // /2 их 2 штуки и еще/2 чтобысередина была
+        for(var i=8; i>=1; i--){
+        var txt=document.createElementNS("http://www.w3.org/2000/svg",'text');
 
-    txt.setAttribute("x",x);
-    txt.setAttribute("y",y);
-    txt.style.fill="black";
-    txt.style.fontSize=sizeForGameSquare*0.6;
-    txt.style.textAnchor="middle";
-    txt.textContent=i;
-    y+=sizeForGameSquare;
+        txt.setAttribute("x",x);
+        txt.setAttribute("y",y);
+        txt.style.fill="black";
+        txt.style.fontSize=sizeForGameSquare*0.6;
+        txt.style.textAnchor="middle";
+        txt.textContent=i;
+        y+=sizeForGameSquare;
 
-    groupCircle.appendChild(txt);
+        groupCircle.appendChild(txt);
 
-   }
-   //для нижнего горизонтального текста
-    y=mainSizeWidth-sizeSmallSquareCornerWidth/8; //  8-подбор оптимальный
-    x=sizeSmallSquareCornerWidth;
-// получить символы из таблицы юникод. сразу вызвать функцию
-    var letterArrForText=(function (){
-      var deltaArr=[];
-      for(var i=65; i<=72; i++) {
-       var s=String.fromCharCode(i);
-    deltaArr.push(s);
+      }
+      //для нижнего горизонтального текста
+        y=mainSizeWidth-sizeSmallSquareCornerWidth/8; //  8-подбор оптимальный
+        x=sizeSmallSquareCornerWidth;
+    // получить символы из таблицы юникод. сразу вызвать функцию
+        var letterArrForText=(function (){
+          var deltaArr=[];
+          for(var i=65; i<=72; i++) {
+          var s=String.fromCharCode(i);
+        deltaArr.push(s);
+        }
+        return deltaArr;
+      })();
+    
+
+      //
+        for(var j=0; j<=7;j++){
+          var txt=document.createElementNS("http://www.w3.org/2000/svg",'text');
+      
+          txt.setAttribute("x",x);
+          txt.setAttribute("y",y);
+          txt.style.fill="black";
+          txt.style.fontSize=sizeForGameSquare/2;
+          txt.style.textAnchor="middle";
+          txt.textContent=letterArrForText[j];
+          x+=sizeForGameSquare;
+          groupCircle.appendChild(txt);
+      start.appendChild(groupCircle);
+      }
     }
-    return deltaArr;
-  })();
- 
-
-  //
-    for(var j=0; j<=7;j++){
-      var txt=document.createElementNS("http://www.w3.org/2000/svg",'text');
-  
-      txt.setAttribute("x",x);
-      txt.setAttribute("y",y);
-      txt.style.fill="black";
-      txt.style.fontSize=sizeForGameSquare/2;
-      txt.style.textAnchor="middle";
-      txt.textContent=letterArrForText[j];
-      x+=sizeForGameSquare;
-      groupCircle.appendChild(txt);
-   start.appendChild(groupCircle);
-  }
-}
-  createReactWithText();
+      createReactWithText();
 
 
-  function setFigure(){
-  //  получить только черные позиции
+      function setFigure(){
+      //  получить только черные позиции
 
-  var blackCellGame=about.blackCell;
-  var arrFigure={};
-  var countForID=1;
-// расставить первому игроку  сверху
-// первые 12 штук
-var groupFigure= document.createElementNS('http://www.w3.org/2000/svg','g');
-groupFigure.setAttribute('id','figure')
-// как обратиться к  нужной позициии
-// узнать координаты
-    for(var i=0; i<=11; i++){
-     var cx=about.posForSquare[blackCellGame[i]].posX+sizeForGameSquare/2; // координаты по квадрату. верхний левый угол
-     // от верхей левой точки отнимаем половину ширины клетки квадрата. чтоб знать центр по Х и У
-     var cy=about.posForSquare[blackCellGame[i]].posY+sizeForGameSquare/2;
-  var  bigCircle= document.createElementNS('http://www.w3.org/2000/svg', 'circle');
-     
-      bigCircle.setAttribute("cx", cx);
-      bigCircle.setAttribute("cy",cy);
-      bigCircle.setAttribute("r", figureRadius);
-      bigCircle.setAttribute("fill", "aqua");
-      bigCircle.setAttribute('id','aqua'+countForID)
-      // добавить в объект
-      arrFigure[blackCellGame[i]]={color:'aqua',
-    id:'aqua'+countForID}
-    countForID++;
-    groupFigure.appendChild(bigCircle);
+      var blackCellGame=about.blackCell;
+      var arrFigure={};
+      var countForID=1;
+    // расставить первому игроку  сверху
+    // первые 12 штук
+    var groupFigure= document.createElementNS('http://www.w3.org/2000/svg','g');
+    groupFigure.setAttribute('id','figure')
+    // как обратиться к  нужной позициии
+    // узнать координаты
+        for(var i=0; i<=11; i++){
+        var cx=about.posForSquare[blackCellGame[i]].posX+sizeForGameSquare/2; // координаты по квадрату. верхний левый угол
+        // от верхей левой точки отнимаем половину ширины клетки квадрата. чтоб знать центр по Х и У
+        var cy=about.posForSquare[blackCellGame[i]].posY+sizeForGameSquare/2;
+      var  bigCircle= document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+        
+          bigCircle.setAttribute("cx", cx);
+          bigCircle.setAttribute("cy",cy);
+          bigCircle.setAttribute("r", figureRadius);
+          bigCircle.setAttribute("fill", "aqua");
+          bigCircle.setAttribute('id','aqua'+countForID)
+          // добавить в объект
+          arrFigure[blackCellGame[i]]={color:'aqua',
+        id:'aqua'+countForID}
+        countForID++;
+        groupFigure.appendChild(bigCircle);
+        }
+
+        //расставить снизу. второму игроку.
+        // вернуть начальное значение для счетчика
+        countForID=1;
+
+        for (var j=blackCellGame.length-1; j>=blackCellGame.length-12;j-- ){
+
+      var  cx=about.posForSquare[blackCellGame[j]].posX+sizeForGameSquare/2; // координаты по квадрату. верхний левый угол
+        //console.log(cx )
+          // от верхей левой точки отнимаем половину ширины клетки квадрата. чтоб знать центр по Х и У
+          var cy=about.posForSquare[blackCellGame[j]].posY+sizeForGameSquare/2;
+          arrFigure[blackCellGame[j]]={color:'magenta'}
+
+          bigCircle= document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+          bigCircle.setAttribute("cx", cx);
+          bigCircle.setAttribute("cy",cy);
+          bigCircle.setAttribute("r", figureRadius);
+          bigCircle.setAttribute("fill", "magenta");
+          bigCircle.setAttribute('id','magenta'+countForID)
+
+          arrFigure[blackCellGame[j]]={color:'magenta',
+          id: 'magenta'+countForID}
+          countForID++;
+          groupFigure.appendChild(bigCircle);
+          
+        }
+        start.appendChild(groupFigure);
+      //console.log(arrFigure)
+      return arrFigure; // объект где все позиции  шашек -> 11:{color: "magenta"}
+    }
+      // добавить в общий объект. потом распределить по игрокам
+        about.arrFigure= setFigure();
+      //  console.log(about)
+
+    //  перетаскивать по  экрану шашки
+    // элемент g куда поместила все шашки
+
+
+    // добавить в глобальный объект about.кто  дамка
+    about.king={}
+
+    // учитывать в глобальном объекте, чей ход.  по очереди
+    about.whoCanStep={};
+    about.whoCanStep={color:true,
+                      id: true, 
+                      translate: true}
+
+
+
+
+    // создать класс игрока
+
+      function Player (){
+        var self=this;
+        self.color=false;
+        self.active=false;
+        self.count=0;
+        self.timeStep=0;
+        self.name=true;
+      }
+
+      // создать объект игрока
+      player1=new Player();
+      player2=new Player();
+      
+      var numbRandomArr=getRandomNumber();
+    // console.log(numbRandomArr);
+      changePlayerState();
+    // getColorForPlayer();
+    // console.log(player1, player2);
+
+
+
+
+    // для рандомного значения 0 или 1
+    // первая цифра: 0 - цвет magenta, 1- aqua
+    // вторая цифра: 0 - active=false , 1- active=true;
+    function getRandomNumber(){
+      var numbRandomArr=[];
+      for(var i=0; i<=1; i++){
+        var abc=Math.floor(Math.random()*(1-0+1))+0;
+        numbRandomArr.push(abc);
+      }
+    return  numbRandomArr;
+    }
+    //узнать,кто active/passive. глоальные  объекты
+    var objAboutStatePlayer=whoActiveOrPassivePlyer();
+    var activePlayer=objAboutStatePlayer.activePlayer;
+    var passivePlayer=objAboutStatePlayer.passivePlayer
+    console.log('activePlayer')
+
+    console.log(activePlayer)
+    console.log('passivePlayer')
+
+    console.log(passivePlayer)
+
+
+    // распределить значения по игрокам
+      function changePlayerState(){
+        // color
+        if(numbRandomArr[0]==0){
+          player1.color='magenta';
+          player2.color='aqua';
+        }
+        else if(numbRandomArr[0]==1){
+          player1.color='aqua';
+          player2.color='magenta';
+        }
+        // who first step
+        if(numbRandomArr[1]==0){
+          player1.active=false;
+          player2.active=true;
+        }
+        else if(numbRandomArr[1]==1){
+          player1.active=true;
+          player2.active=false;
+        }
+
     }
 
-    //расставить снизу. второму игроку.
-    // вернуть начальное значение для счетчика
-    countForID=1;
+      function whoActiveOrPassivePlyer(){
+        if(player1.active==true){
+          // дать знать, кто ходит первым
+          // определить active/passive
+      //   countElemPlayer1.innerText='Ваш ход первым';
+        // console.log(player1,player2)
+          return {activePlayer:player1,
+                  passivePlayer:player2}
+        }
+        if(player1.active==false ){
+      //   countElemPlayer2.innerText='Ваш ход первым';
 
-    for (var j=blackCellGame.length-1; j>=blackCellGame.length-12;j-- ){
+          return {passivePlayer:player1,
+                activePlayer:player2}
 
-   var  cx=about.posForSquare[blackCellGame[j]].posX+sizeForGameSquare/2; // координаты по квадрату. верхний левый угол
-    //console.log(cx )
-      // от верхей левой точки отнимаем половину ширины клетки квадрата. чтоб знать центр по Х и У
-      var cy=about.posForSquare[blackCellGame[j]].posY+sizeForGameSquare/2;
-      arrFigure[blackCellGame[j]]={color:'magenta'}
-
-      bigCircle= document.createElementNS('http://www.w3.org/2000/svg', 'circle');
-       bigCircle.setAttribute("cx", cx);
-       bigCircle.setAttribute("cy",cy);
-       bigCircle.setAttribute("r", figureRadius);
-       bigCircle.setAttribute("fill", "magenta");
-       bigCircle.setAttribute('id','magenta'+countForID)
-
-       arrFigure[blackCellGame[j]]={color:'magenta',
-       id: 'magenta'+countForID}
-       countForID++;
-       groupFigure.appendChild(bigCircle);
-       
-    }
-    start.appendChild(groupFigure);
-  //console.log(arrFigure)
-  return arrFigure; // объект где все позиции  шашек -> 11:{color: "magenta"}
-}
-  // добавить в общий объект. потом распределить по игрокам
-    about.arrFigure= setFigure();
-  //  console.log(about)
-
-//  перетаскивать по  экрану шашки
-// элемент g куда поместила все шашки
+        }
+      }
 
 
- // добавить в глобальный объект about.кто  дамка
- about.king={}
-
- // учитывать в глобальном объекте, чей ход.  по очереди
- about.whoCanStep={};
- about.whoCanStep={color:true,
-                  id: true, 
-                  translate: true}
 
 
 var conteinerFigure= document.getElementById('figure');
 
 
-   // подписаться на touch события
+   //--------------------------------------------------------- подписаться на touch события
    conteinerFigure.addEventListener('touchstart',beginerMoveForTouch, false )
 
    function beginerMoveForTouch(EO){
      EO=EO|| window.event;
      EO.preventDefault();
-   // если касается двумя пальцами и больше
+
+      // если касается двумя пальцами и больше
       if(EO.touches.length>1){
         return false;
       }
@@ -348,7 +526,8 @@ var conteinerFigure= document.getElementById('figure');
      // получить возможные,правильные клетки для хода. уже проверили
     
      
-    nextStepObj.posFigure=legalyPos(lastStepObj.colorFigure,lastStepObj.currentIDSquare,
+    nextStepObj.posFigure=
+    (lastStepObj.colorFigure,lastStepObj.currentIDSquare,
       lastStepObj.typeStep,"transferSquare", nextStepObj);
    
     //nextStepObj.posFigure=abc;
@@ -375,7 +554,7 @@ var conteinerFigure= document.getElementById('figure');
     //
     // about.whoCanStep.color=colorFigure;
    
-      
+      // срабатывает только на фигура
     conteinerFigure.ontouchmove = moveAtTouch;
    
      function moveAtTouch(EO){
@@ -417,7 +596,7 @@ var conteinerFigure= document.getElementById('figure');
          // проверить, отпущен ли клик в нужных координатах
          nextStepObj.result= whereMouseUp(pageX,pageY,nextStepObj, lastStepObj )
      
-         about.whoCanStep.translate=false;
+        // about.whoCanStep.translate=false;
              // записать цвет фигуры, для контроля хода
       
        about.whoCanStep.color=colorFigure;
@@ -445,10 +624,37 @@ var conteinerFigure= document.getElementById('figure');
      
        // удалить на доске и в объекте
        deleteFigureOnDesk(nextStepObj);
+
+//записать очки
+toWriteCount(nextStepObj);
+// canDoubleStep(lastStepObj,nextStepObj );
+
+// добавить звук,когда удачный/правильный ход/перемещение фигуры
+if(nextStepObj.result.condition==true){
+gameAudio.play();
+}
+
+// проверка на победу
+// проверка на  конец игры. все фигуры одного цвета остались
+// сделать анимацию
+if( Object.keys(about.arrFigure).length<=22){   //14
+ 
+  winner.name=victory();
+  if( winner.name){
+    // добавить класс анимации 
+    // модальное окно - фон анимация
+    // еще отсчитать сколько времени играла
+    // это и пойдет в таблицу рекордов
+  console.log('winner no false')
+  }
+   }
+
+
+
      
        // то,что ниже в самую последнюю очередь
-         document.onmousemove = null;
-         currentGigure.onmouseup = null;
+         document.ontouchmove = null;
+         currentGigure.ontouchend = null;
          nextStepObj=null;
          lastStepObj=null;
      
@@ -464,18 +670,9 @@ var conteinerFigure= document.getElementById('figure');
      //v исключительно для тестировки
    //  deleteAllAqua();
    
-   
-   // проверка на  конец игры. все фигуры одного цвета остались
-     if( Object.keys(about.arrFigure).length<=22){
-      // console.log('victory');
-        console.log('победу одержала  '+victory());
-   
-         }
-   
-         console.log(about)
-   
+ 
    }
-//------------------------------------ конец touch
+//------------------------------------ конец touch-------------------------------------------
 
 
 
@@ -501,6 +698,11 @@ function beginerMove(EO){
  // для записи отметки дамка
  // добавить в глобальный объект about
  //about.king={}
+
+
+
+// добавить ход
+ // activePlayer.timeStep=activePlayer.timeStep+1;
 
  
 
@@ -557,8 +759,6 @@ function beginerMove(EO){
 
 
   // получить возможные,правильные клетки для хода. уже проверили
- 
-  
  nextStepObj.posFigure=legalyPos(lastStepObj.colorFigure,lastStepObj.currentIDSquare,
    lastStepObj.typeStep,"transferSquare", nextStepObj);
 
@@ -616,16 +816,16 @@ function beginerMove(EO){
     var pageX=EO.pageX;
     var pageY=EO.pageY;
   //  console.log(aboutStepObj)
-  //----------------------------------------------------test
 
   // записать цвет фигуры, для контроля хода
-  //about.whoCanStep.color=colorFigure;
 
 
     // проверить, отпущен ли клик в нужных координатах
-    nextStepObj.result= whereMouseUp(pageX,pageY,nextStepObj, lastStepObj )
+    nextStepObj.result= whereMouseUp(pageX,pageY,nextStepObj, lastStepObj );
 
-    about.whoCanStep.translate=false;
+    whoCanStepFun(lastStepObj,nextStepObj);
+
+   // about.whoCanStep.translate=false;
 
         
         // записать цвет фигуры, для контроля хода
@@ -655,8 +855,30 @@ function beginerMove(EO){
 
   // удалить на доске и в объекте
   deleteFigureOnDesk(nextStepObj);
-
+//записать очки
+ toWriteCount(nextStepObj);
 // canDoubleStep(lastStepObj,nextStepObj );
+
+// добавить звук,когда удачный/правильный ход/перемещение фигуры
+if(nextStepObj.result.condition==true){
+gameAudio.play();
+}
+
+// проверка на победу
+// проверка на  конец игры. все фигуры одного цвета остались
+// сделать анимацию
+if( Object.keys(about.arrFigure).length<=22){   //14
+ 
+    winner.name=victory();
+    if( winner.name){
+      // добавить класс анимации 
+      // модальное окно - фон анимация
+      // еще отсчитать сколько времени играла
+      // это и пойдет в таблицу рекордов
+    console.log('winner no false')
+    }
+     }
+
   // то,что ниже в самую последнюю очередь
    // console.log(result)
     document.onmousemove = null;
@@ -676,15 +898,9 @@ document.ondragstart = function() {
 //  deleteAllAqua();
 
 
-// проверка на  конец игры. все фигуры одного цвета остались
-  if( Object.keys(about.arrFigure).length<=22){
-   // console.log('victory');
-     console.log('победу одержала  '+victory());
 
-      }
 
-      console.log(about)
-
+     
 }
 //------------------------------------ конец beginerMove
 
@@ -698,7 +914,7 @@ document.ondragstart = function() {
 
       // узнать какой квадрат
  function getIDSquare(clickPageX,clickPageY ){
-  var numberArr=getNumberArr(); // для  перебора. чтобы искать  ["11", "21", "31...
+  numberArr=getNumberArr(); // для  перебора. чтобы искать  ["11", "21", "31...
   // координата высчитывается так- знаю коорд верхнего левого угла
   // прибавляю размеры квадрата игрового. если клик в этом диапазоне- гуд
       for(var i=0; i<=numberArr.length-1; i++){
@@ -789,14 +1005,25 @@ document.ondragstart = function() {
      // надо ли тут posFigure.по идее - да
      var posFigure={};
     // удалить опредыдущем  ходе, если другой цвет
+    /*
      if(about.whoCanStep.color!= colorFigure){
       about.whoCanStep.id=true;
      }
-     
+     */
+     /*
+     // оычный первый ход
+  if(activePlayer.color!=colorFigure && activePlayer.timeStep==0){
+    console.log('у вас нет права ходить')
+    return posFigure;
+
+  } 
+  */
+
      // если цвета совпадают. повторный ход недопустить (но если бил  до этого - нужно пропустить)
      //одинаковые цвета?
      // била до этого?
      // от случайных ходов не спасает.
+     /*
      console.log(about)
 
      if((about.whoCanStep.color== colorFigure && currentIDSquare!=about.whoCanStep.id &&
@@ -809,6 +1036,38 @@ document.ondragstart = function() {
 
      }
      
+*/
+ 
+  // обычный ход
+  if((colorFigure==activePlayer.color && activePlayer.active==true )||
+    ( passivePlayer.active==false && activePlayer.timeStep>0) ){
+
+    //  if(currentIDSquare!=about.whoCanStep.id )
+     // console.log(activePlayer);
+    //  console.log(passivePlayer);
+
+    //  console.log('фильтр')
+
+      if(activePlayer.timeStep>0 && currentIDSquare!=about.whoCanStep.id &&
+        colorFigure==activePlayer.color){
+          console.log('eeeeee')
+          //дернули не ту. ходить должен противоположный цвет
+          activePlayer.timeStep=-1;
+          //  console.log(activePlayer);
+        //  console.log(passivePlayer);
+          return posFigure;
+        }
+  }
+
+  else {
+    return posFigure;
+  }
+
+
+//------
+ // console.log(player1.color);
+ // console.log(player2.color);
+
 
     // узнать клетки, куда могу ходить
     // обычный ход
@@ -823,6 +1082,7 @@ document.ondragstart = function() {
   }
 //--------------------------------
 // вызов из checkFigure
+
     if(typeStep==2 ){
      // console.log('currentIDSquare')
 
@@ -1060,6 +1320,76 @@ if(lastStepObj.currentIDSquare in nextStepObj.posFigure){
   return {condition:false,
           newPositionID:false} }
 
+// контроль для следующего  хода 
+
+       function   whoCanStepFun(lastStepObj,nextStepObj){
+         // простой  ход. нет бить
+         if((nextStepObj.result.condition==true &&
+          
+          lastStepObj.colorFigure==activePlayer.color &&
+          Object.keys(nextStepObj.forFightFigure).length==0)){
+    console.log('меняем player');
+    activePlayer.active=false;
+    passivePlayer.active=true;
+    activePlayer.timeStep=0;
+    console.log(activePlayer);
+    if(activePlayer.active==false ){
+      var abc = activePlayer;
+      activePlayer=passivePlayer;
+      passivePlayer=abc;
+    }
+
+          }
+
+          
+       //   console.log(activePlayer);
+        // побили фигуру
+        if(nextStepObj.result.condition==true &&
+         
+          lastStepObj.colorFigure==activePlayer.color &&
+          Object.keys(nextStepObj.forFightFigure).length>0){
+    console.log('побили фигуру');
+    activePlayer.timeStep=activePlayer.timeStep+1;
+    activePlayer.active=true;
+    passivePlayer.active=false;
+    console.log(activePlayer);
+
+          }
+         // случайный ход. все остается
+         if(nextStepObj.result.condition==false && 
+          lastStepObj.colorFigure==activePlayer.color){
+           console.log('baad');
+           activePlayer.active=true;
+           passivePlayer.active=false;
+         }
+
+         if(    activePlayer.timeStep>0 && lastStepObj.colorFigure!=activePlayer.color )
+          {
+            activePlayer.timeStep=0;
+           // console.log('побили фигуру нууу');
+        
+          }
+
+          if(activePlayer.timeStep==-1){
+            console.log('дернули не ту. справл')
+            activePlayer.active=false;
+            passivePlayer.active=true;
+            activePlayer.timeStep=0;
+            console.log(activePlayer);
+            if(activePlayer.active==false ){
+              var abc = activePlayer;
+              activePlayer=passivePlayer;
+              passivePlayer=abc;
+            }
+      activePlayer.timeStep=0;
+      console.log(activePlayer);
+      console.log(passivePlayer);
+
+          }
+       }
+
+ 
+
 
   //красиво нарисовать в центре
    function   paintNiceFirure(figureDOM, nextStepObj,oldPosition){
@@ -1109,7 +1439,7 @@ if(lastStepObj.currentIDSquare in nextStepObj.posFigure){
 
      // а были перемещения фигур на игровом поле верные, тогда  true и ходит следующий
     
-    about.whoCanStep.translate=true;
+   // about.whoCanStep.translate=true;
     
 
      // записать новый
@@ -1195,10 +1525,6 @@ function canDoubleStep(lastStepObj,nextStepObj ){
 // удаляю фигуру с доски и удаляю из  about.arrFigure
 
  function deleteFigureOnDesk(nextStepObj){
-
-
-
-
   var checForFight=Object.keys(nextStepObj.forFightFigure);
   // проверка, есть ли что бить
   //  console.log(checForFight)
@@ -1248,32 +1574,30 @@ function canDoubleStep(lastStepObj,nextStepObj ){
  }
  }
 
+ 
  // закончилась ли игра?
  // определить победителя
+ 
  function victory() {
+// массив фигур, которые в игре
+ // var arrOfColor=Object.keys(about.arrFigure);
+// у кого первого 12 очков
 
-  var arrOfColor=Object.keys(about.arrFigure);
-
-  // если все одинаковые цвета остались,сообщить о победе
-   function whichColorMagenta(v,i,a){
+  if(player1.count==1){
+    // значит выиграл другой игрок
+    countElemPlayer2.innerText='Вы победили';
+    winner.color=player2.color;
+    return player2.name;
     
-       return v="magenta";}
-
-     function whichColorAqua(v,i,a){
-    
-     return v="aqua";}
-    
-      // кто первый даст true, тот и выиграл
-   var answerMagenta=arrOfColor.every(whichColorMagenta);
-   var answerAqua=arrOfColor.every(whichColorAqua);
-
-  if(answerMagenta==true){
-    return "magenta";
   }
-  if(answerAqua==true){
-    return "aqua";
-  }
+  else if(player2.count==1){
+    countElemPlayer1.innerText='Вы победили';
+    winner.color=player1.color;
 
+    return player1.name;
+
+  }
+  else {return false}
  }
 
  function deleteAllAqua(){
@@ -1283,9 +1607,48 @@ function canDoubleStep(lastStepObj,nextStepObj ){
     if(about.arrFigure[allAquaArr[i]].color=="aqua"){
       delete about.arrFigure[allAquaArr[i]];
     }
-
-
    }
  }
 
+ //записаь очки
 
+ function  toWriteCount(nextStepObj){
+   var figureToDelete=Object.keys(nextStepObj.forFightFigure);
+   if(figureToDelete.length!=0){
+// цвет фигуры, которая побила
+     var colorGameOver=nextStepObj.colorFigure;
+     // записать очко на счет
+     if(player1.color==colorGameOver){
+       player1.count=player1.count+1;
+     }
+     else{ 
+      player2.count=player2.count+1;
+
+     }
+     // очко записать этому цвету
+    // проиграет,кто первым наберет больше очков
+    // выиграет как в обычных шашках, то тут проиграет
+
+    // поле очков player1
+    // поле очков player
+
+  //  countElemPlayer1.innerText='Счет '+player1.count;
+  //  countElemPlayer2.innerText='Счет '+player2.count;
+//показать счет
+// кто побил фиуру, получил очко - анимация окна со счетом
+
+    if(player1.color==colorGameOver){
+    countElemPlayer1.innerText='Счет '+player1.count;
+    ElemPlayer1.classList.add('active');
+    ElemPlayer2.classList.remove('active')
+    }
+    else{
+    countElemPlayer2.innerText='Счет '+player2.count;
+    ElemPlayer2.classList.add('active');
+    ElemPlayer1.classList.remove('active')
+    }
+    
+   }
+ }
+
+}

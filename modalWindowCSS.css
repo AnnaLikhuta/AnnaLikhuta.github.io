@@ -1,21 +1,48 @@
 /* модальное окно */
+/* мои*/
+.inside_standart_div_pos{
+  width: 48%;
+  display: inline-block;
+ 
+}
+.field_enter_name{
+  width: 70%;
+  border: 2px #c92f96 solid;
+  border-radius: 5px;
+}
+.hide_alarm{
+  opacity: 0;
+  transition: opacity s;
 
+}
+.show_alarm{
+  opacity: 1;
+  transition: opacity 0.5s;
+}
+
+/* общие*/
 * {
   box-sizing: border-box;
 }
 html, body {
   min-height: 100%;
   height: 100%;
+  
   background-image: url(http://theartmad.com/wp-content/uploads/Dark-Grey-Texture-Wallpaper-5.jpg);
+  background-image: url(Dark.jpg);
+
   background-size: cover;
   background-position: top center;
   font-family: helvetica neue, helvetica, arial, sans-serif;
-  text-align: center;
+  text-align: ;
 
 }
+
 html.modal-active, body.modal-active {
   overflow: hidden;
 }
+
+
 #modal-container {
   position: fixed;
   display: table;
@@ -46,13 +73,14 @@ html.modal-active, body.modal-active {
   background: rgba(0, 0, 0, .8);
   text-align: center;
   vertical-align: middle;
+  
 }
 #modal-container .modal-background .modal {
   background: white;
   padding: 0px;
   display: inline-block;
   border-radius: 3px;
-  
+  padding: 10px;
   position: relative;
 }
 #modal-container .modal-background .modal h2 {
@@ -108,6 +136,173 @@ html.modal-active, body.modal-active {
   100% {
     transform: scale(0);
   }
+}
+
+
+/* второе модальное окно для победителя  */
+#modal-container-winner {
+  position: fixed;
+  display: table;
+  height: 100%;
+  width: 100%;
+  top: 0;
+  left: 0;
+  transform: scale(0);
+  z-index: 1;
+}
+#modal-container-winner.one {
+  transform: scaleY(0.01) scaleX(0);
+  animation: unfoldIn 1s cubic-bezier(0.165, 0.84, 0.44, 1) forwards;
+}
+#modal-container-winner.one .modal-background .modal {
+  transform: scale(0);
+  animation: zoomIn 0.5s 0.8s cubic-bezier(0.165, 0.84, 0.44, 1) forwards;
+}
+#modal-container-winner.one.out {
+  transform: scale(1);
+  animation: unfoldOut 1s 0.3s cubic-bezier(0.165, 0.84, 0.44, 1) forwards;
+}
+#modal-container-winner.one.out .modal-background .modal {
+  animation: zoomOut 0.5s cubic-bezier(0.165, 0.84, 0.44, 1) forwards;
+}
+#modal-container-winner .modal-background {
+  display: table-cell;
+  background: rgba(0, 0, 0, .8);
+  text-align: center;
+  vertical-align: middle;
+  
+}
+#modal-container-winner .modal-background .modal {
+  background:white;
+  padding: 0px;
+  display: inline-block;
+  border-radius: 3px;
+  padding: 10px;
+  position: relative;
+  min-height: 20px;
+  min-width: 20%;
+  ;
+}
+#modal-container-winner .modal-background .modal h2 {
+  font-size: 20px;
+  line-height: 20px;
+  margin-bottom: 15px;
+}
+#modal-container-winner .modal-background .modal p {
+  font-size: 18px;
+  line-height: 22px;
+}
+
+
+/*просмотреть правила  */
+#modal-container-rules {
+  position: fixed;
+  display: table;
+  height: 100%;
+  width: 100%;
+  top: 0;
+  left: 0;
+  transform: scale(0);
+  z-index: 1;
+}
+#modal-container-rules.one {
+  transform: scaleY(0.01) scaleX(0);
+  animation: unfoldIn 1s cubic-bezier(0.165, 0.84, 0.44, 1) forwards;
+}
+#modal-container-rules.one .modal-background .modal {
+  transform: scale(0);
+  animation: zoomIn 0.5s 0.8s cubic-bezier(0.165, 0.84, 0.44, 1) forwards;
+}
+#modal-container-rules.one.out {
+  transform: scale(1);
+  animation: unfoldOut 1s 0.3s cubic-bezier(0.165, 0.84, 0.44, 1) forwards;
+}
+#modal-container-rules.one.out .modal-background .modal {
+  animation: zoomOut 0.5s cubic-bezier(0.165, 0.84, 0.44, 1) forwards;
+}
+#modal-container-rules .modal-background {
+  display: table-cell;
+  background: rgba(0, 0, 0, .8);
+  text-align: center;
+  vertical-align: middle;
+  
+  
+}
+#modal-container-rules .modal-background .modal {
+  background:white;
+  padding: 0px;
+  display: inline-block;
+  border-radius: 3px;
+  padding: 10px;
+  position: relative;
+  min-height: 20px;
+  min-width: 20%;
+  max-width: 80%;
+}
+#modal-container-rules .modal-background .modal h2 {
+  font-size: 20px;
+  line-height: 20px;
+  margin-bottom: 15px;
+}
+#modal-container-rules .modal-background .modal p {
+  font-size: 18px;
+  line-height: 22px;
+}
+
+
+/* таблица рекордов */
+#modal-container-records {
+  position: fixed;
+  display: table;
+  height: 100%;
+  width: 100%;
+  top: 0;
+  left: 0;
+  transform: scale(0);
+  z-index: 1;
+}
+#modal-container-records.one {
+  transform: scaleY(0.01) scaleX(0);
+  animation: unfoldIn 1s cubic-bezier(0.165, 0.84, 0.44, 1) forwards;
+}
+#modal-container-records.one .modal-background .modal {
+  transform: scale(0);
+  animation: zoomIn 0.5s 0.8s cubic-bezier(0.165, 0.84, 0.44, 1) forwards;
+}
+#modal-container-records.one.out {
+  transform: scale(1);
+  animation: unfoldOut 1s 0.3s cubic-bezier(0.165, 0.84, 0.44, 1) forwards;
+}
+#modal-container-records.one.out .modal-background .modal {
+  animation: zoomOut 0.5s cubic-bezier(0.165, 0.84, 0.44, 1) forwards;
+}
+#modal-container-records .modal-background {
+  display: table-cell;
+  background: rgba(0, 0, 0, .8);
+  text-align: center;
+  vertical-align: middle;
+  
+  
+}
+#modal-container-records .modal-background .modal {
+  background:white;
+  padding: 0px;
+  display: inline-block;
+  border-radius: 3px;
+  padding: 10px;
+  position: relative;
+  min-height: 20px;
+  min-width: 20%;
+  max-width: 80%;
+}
+#modal-container-records .modal-background .modal h2 {
+  font-size: 20px;
+  line-height: 20px;
+  margin-bottom: 15px;
+}
+#modal-container-records .modal-background .modal p {
+  font-size: 18px;
+  line-height: 22px;
 }
 
 
