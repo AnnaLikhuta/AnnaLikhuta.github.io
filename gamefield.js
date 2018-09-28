@@ -449,7 +449,7 @@ var elemForInserch=document.getElementById('game_field')
 var conteinerFigure= document.getElementById('figure');
 
 
-   //--------------------------------------------------------- подписаться на touch события
+   // подписаться на touch события
    conteinerFigure.addEventListener('touchstart',beginerMoveForTouch, false )
 
    function beginerMoveForTouch(EO){
@@ -465,6 +465,7 @@ var conteinerFigure= document.getElementById('figure');
         if(EO.touches.length==1){
           console.log('one touch')
         }
+        
      console.log('следующий ход')
    
      // хранить информацию про старый ход, текущий
@@ -526,8 +527,7 @@ var conteinerFigure= document.getElementById('figure');
      // получить возможные,правильные клетки для хода. уже проверили
     
      
-    nextStepObj.posFigure=
-    (lastStepObj.colorFigure,lastStepObj.currentIDSquare,
+    nextStepObj.posFigure=legalyPos(lastStepObj.colorFigure,lastStepObj.currentIDSquare,
       lastStepObj.typeStep,"transferSquare", nextStepObj);
    
     //nextStepObj.posFigure=abc;
@@ -595,8 +595,9 @@ var conteinerFigure= document.getElementById('figure');
          console.log(pageX,pageY )
          // проверить, отпущен ли клик в нужных координатах
          nextStepObj.result= whereMouseUp(pageX,pageY,nextStepObj, lastStepObj )
-     
-        // about.whoCanStep.translate=false;
+         whoCanStepFun(lastStepObj,nextStepObj);
+
+         about.whoCanStep.translate=false;
              // записать цвет фигуры, для контроля хода
       
        about.whoCanStep.color=colorFigure;
@@ -624,17 +625,15 @@ var conteinerFigure= document.getElementById('figure');
      
        // удалить на доске и в объекте
        deleteFigureOnDesk(nextStepObj);
+        //записать очки
+        toWriteCount(nextStepObj);
 
-//записать очки
-toWriteCount(nextStepObj);
-// canDoubleStep(lastStepObj,nextStepObj );
-
-// добавить звук,когда удачный/правильный ход/перемещение фигуры
-if(nextStepObj.result.condition==true){
-gameAudio.play();
-}
-
-// проверка на победу
+        if(nextStepObj.result.condition==true){
+          gameAudio.play();
+          }
+        
+          
+          // проверка на победу
 // проверка на  конец игры. все фигуры одного цвета остались
 // сделать анимацию
 if( Object.keys(about.arrFigure).length<=22){   //14
@@ -649,12 +648,10 @@ if( Object.keys(about.arrFigure).length<=22){   //14
   }
    }
 
-
-
      
        // то,что ниже в самую последнюю очередь
-         document.ontouchmove = null;
-         currentGigure.ontouchend = null;
+         document.onmousemove = null;
+         currentGigure.onmouseup = null;
          nextStepObj=null;
          lastStepObj=null;
      
@@ -670,7 +667,9 @@ if( Object.keys(about.arrFigure).length<=22){   //14
      //v исключительно для тестировки
    //  deleteAllAqua();
    
- 
+   
+         console.log(about)
+   
    }
 //------------------------------------ конец touch-------------------------------------------
 
@@ -825,7 +824,7 @@ function beginerMove(EO){
 
     whoCanStepFun(lastStepObj,nextStepObj);
 
-   // about.whoCanStep.translate=false;
+    about.whoCanStep.translate=false;
 
         
         // записать цвет фигуры, для контроля хода
@@ -1254,12 +1253,14 @@ return arr;
          }
          
        // дописать координаты этих клеток. а нужно ли?
+       
          for( var j=0; j<=squareIDForAttention.length-1; j++){
           nextStepObj.posFigure[squareIDForAttention[j]].posX=
            about.posForSquare[squareIDForAttention[j]].posX;
            nextStepObj.posFigure[squareIDForAttention[j]].posY=
            about.posForSquare[squareIDForAttention[j]].posY;
          }
+         
    }
 
    function translateCoord(pageX,pageY){
