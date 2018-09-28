@@ -1778,10 +1778,10 @@ document.addEventListener('touchmove',ontouchMove, false);
 document.addEventListener('touchend',ontouchEnd, false);
 
 function ontouchStart(EO){
- console.log(EO.touches)
+  if(EO.changedTouches.length==2 ){
+  // console.log('ok')
 
-  if(EO.touches.length==2){
-  var touchobj = EO.touches[0]
+  var touchobj = EO.changedTouches[0]
   dist = 0;
   startX = touchobj.pageX;
   startY = touchobj.pageY;
@@ -1792,21 +1792,21 @@ function ontouchStart(EO){
 
 function ontouchMove (EO){
  // EO.preventDefault();
- // console.log('ontouchMove')
+  console.log('ontouchMove')
 
 
 }
 
 function ontouchEnd (EO){
   console.log('ontouchEnd')
-  if(EO.touches.length==2){
-  var touchobj = EO.touches[0]
+  if(EO.changedTouches.length==2 ) {
+  var touchobj = EO.changedTouches[0]
   dist = touchobj.pageX - startX // получаем пройденную дистанцию
  // elapsedTime = new Date().getTime() - startTime // узнаем пройденное время
   // проверяем затраченное время,горизонтальное перемещение >= threshold, и вертикальное перемещение <= 100
   var swiperightBol = ( dist >= threshold && Math.abs(touchobj.pageY - startY) <= 100)
   handleswipe(swiperightBol);
-  EO.preventDefault();
+ // EO.preventDefault()
 }
 
 }
