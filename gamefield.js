@@ -77,7 +77,13 @@ var modalRecords=document.getElementById('modal-container-records');
 var modalRecordsClose=document.getElementById('modal_background_records');
 
 // где сама игра
-var elemForInserch=document.getElementById('game_field')
+var elemForInserch=document.getElementById('game_field');
+ // для свайпа
+ var startX,
+ startY,
+ dist,
+ threshold = 400 // минимальное расстояние для swipe
+
 
    
    //основные размеры
@@ -457,6 +463,11 @@ var conteinerFigure= document.getElementById('figure');
      EO.preventDefault();
      console.log(EO.targetTouches)
 
+      document.addEventListener('touchstart',ontouchStart, false);
+      document.addEventListener('touchmove',ontouchMove, false);
+      document.addEventListener('touchend',ontouchEnd, false);
+
+
       // если касается двумя пальцами и больше
       // пропустить 3 касания для свайпа
       if(EO.touches.length>1 && EO.touches.length!=3){
@@ -641,7 +652,7 @@ var conteinerFigure= document.getElementById('figure');
           // проверка на победу
 // проверка на  конец игры. все фигуры одного цвета остались
 // сделать анимацию
-if( Object.keys(about.arrFigure).length<=22){   //14
+if( Object.keys(about.arrFigure).length<=24){   //14
  
   winner.name=victory();
   if( winner.name){
@@ -873,7 +884,7 @@ vibro(true);
 // проверка на победу
 // проверка на  конец игры. все фигуры одного цвета остались
 // сделать анимацию
-if( Object.keys(about.arrFigure).length<=22){   //14
+if( Object.keys(about.arrFigure).length<=24){   //14
  
     winner.name=victory();
     if( winner.name){
@@ -1590,6 +1601,7 @@ function canDoubleStep(lastStepObj,nextStepObj ){
 // массив фигур, которые в игре
  // var arrOfColor=Object.keys(about.arrFigure);
 // у кого первого 12 очков
+console.log('victory')
 
   if(player1.count==1){
     // значит выиграл другой игрок
@@ -1671,26 +1683,15 @@ function canDoubleStep(lastStepObj,nextStepObj ){
 }
 
 // свайп для мобильного.
-// три пальца провести
 
 
-  var startX,
-   startY,
-   dist,
-   threshold = 300, // минимальное расстояние для swipe
-   allowedTime = 200, // максимальное время прохождения установленного расстояния
-   elapsedTime,
-   startTime;
-   // число касаний, которое обрабатываю
 
-document.addEventListener('touchstart',ontouchStart, false);
-document.addEventListener('touchmove',ontouchMove, false);
-document.addEventListener('touchend',ontouchEnd, false);
+
 
 function ontouchStart(EO){
 
   var touchobj = EO.changedTouches[0];
-  if(EO.changedTouches.length==2)
+  if(EO.changedTouches.length==1)
   {dist = 0;
   startX = touchobj.pageX;
   startY = touchobj.pageY;
@@ -1705,11 +1706,9 @@ function ontouchMove (EO){
 
 function ontouchEnd (EO){
   console.log('ontouchEnd')
-  if(EO.changedTouches.length==2){
+  if(EO.changedTouches.length==1){
   var touchobj = EO.changedTouches[0]
   dist = touchobj.pageX - startX // получаем пройденную дистанцию
- // elapsedTime = new Date().getTime() - startTime // узнаем пройденное время
-  // проверяем затраченное время,горизонтальное перемещение >= threshold, и вертикальное перемещение <= 100
   var swiperightBol = ( dist >= threshold && Math.abs(touchobj.pageY - startY) <= 100)
   handleswipe(swiperightBol);
  // EO.preventDefault()
@@ -1717,11 +1716,22 @@ function ontouchEnd (EO){
 }
 
 function handleswipe(isrightswipe){
-  if (isrightswipe)
-  countElemPlayer1.innerText='Свайп получился'
-  else{
-    countElemPlayer1.innerText='что-то другое'
+  // чтобы выиграл тот,  чей ход сейчас
+  if (isrightswipe){
+    if(player1.active==true){
+      player2.count=1; // 12  что выигрывает другой
+      winner.name=victory();
+      
+    }
+    else{ 
+      player1.count=1; // 12  что выигрывает другой
+      winner.name=victory();
+    }
   }
+
+
+ // countElemPlayer1.innerText='Свайп получился'
+ 
 }
 
 
