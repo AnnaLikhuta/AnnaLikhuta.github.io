@@ -1690,7 +1690,7 @@ document.addEventListener('touchend',ontouchEnd, false);
 function ontouchStart(EO){
 
   var touchobj = EO.changedTouches[0];
-  if(EO.changedTouches.length==2)
+  if(EO.changedTouches.length==1)
   {dist = 0;
   startX = touchobj.pageX;
   startY = touchobj.pageY;
@@ -1705,6 +1705,7 @@ function ontouchMove (EO){
 
 function ontouchEnd (EO){
   console.log('ontouchEnd')
+  if(EO.changedTouches.length==1){
   var touchobj = EO.changedTouches[0]
   dist = touchobj.pageX - startX // получаем пройденную дистанцию
  // elapsedTime = new Date().getTime() - startTime // узнаем пройденное время
@@ -1712,7 +1713,7 @@ function ontouchEnd (EO){
   var swiperightBol = ( dist >= threshold && Math.abs(touchobj.pageY - startY) <= 100)
   handleswipe(swiperightBol);
  // EO.preventDefault()
-
+}
 }
 
 function handleswipe(isrightswipe){
