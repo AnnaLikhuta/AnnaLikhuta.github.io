@@ -1778,6 +1778,8 @@ document.addEventListener('touchmove',ontouchMove, false);
 document.addEventListener('touchend',ontouchEnd, false);
 
 function ontouchStart(EO){
+ console.log(EO.touches)
+
   if(EO.touches.length==2){
   var touchobj = EO.touches[0]
   dist = 0;
@@ -1790,7 +1792,7 @@ function ontouchStart(EO){
 
 function ontouchMove (EO){
  // EO.preventDefault();
-  console.log('ontouchMove')
+ // console.log('ontouchMove')
 
 
 }
