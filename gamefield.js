@@ -455,14 +455,16 @@ var conteinerFigure= document.getElementById('figure');
    function beginerMoveForTouch(EO){
      EO=EO|| window.event;
      EO.preventDefault();
+     console.log(EO.targetTouches)
 
       // если касается двумя пальцами и больше
-      if(EO.touches.length>1){
+      // пропустить 3 касания для свайпа
+      if(EO.touches.length>1 && EO.touches.length!=3){
         return false;
       }
 
         // если касается двумя пальцами и больше
-        if(EO.touches.length==1){
+        if(EO.touches.length==1 || EO.touches.length==3){
           console.log('one touch')
         }
         
@@ -630,7 +632,7 @@ var conteinerFigure= document.getElementById('figure');
 
         if(nextStepObj.result.condition==true){
           gameAudio.play();
-          vibro(false);
+          vibro(true);
 
           }
         
@@ -864,6 +866,8 @@ function beginerMove(EO){
 // добавить звук,когда удачный/правильный ход/перемещение фигуры
 if(nextStepObj.result.condition==true){
 gameAudio.play();
+vibro(true);
+
 }
 
 // проверка на победу
@@ -1658,6 +1662,7 @@ function canDoubleStep(lastStepObj,nextStepObj ){
  // вибрация на мобильном
  function vibro(longFlag) {
   if ( navigator.vibrate ) { // есть поддержка Vibration API?
+    console.log('vibro')
       if ( !longFlag )
           window.navigator.vibrate(100); // вибрация 100мс
       else
@@ -1665,7 +1670,89 @@ function canDoubleStep(lastStepObj,nextStepObj ){
   }
 }
 
+// свайп для мобильного.
+// три пальца провести
+window.addEventListener('load', function(){
+    
+      var touchsurface = document.body,
+          startX,
+          startY,
+          dist,
+          threshold = 150, // минимальное расстояние для swipe
+          allowedTime = 200, // максимальное время прохождения установленного расстояния
+          elapsedTime,
+          startTime,
+          // число касаний, которое обрабатываю
 
+          //countTouches=3,
+          swiperightBol 
+    
+      function handleswipe(isrightswipe){
+          if (isrightswipe)
+          countElemPlayer1.innerText='Свайп получился'
+          else{
+            countElemPlayer1.innerText='что-то другое'
+          }
+      }
+    
+      touchsurface.addEventListener('touchstart', function(EO){
+         // touchsurface.innerHTML = ''
+         // три штуки
+         
+          var touchobj = EO.targetTouches;
+          if(touchobj.length!=3){
+            return false;
+          }
+          for(var i=0; i<=touchobj.length-1; i++){
+            dist[i]=0;
+            startX[i] = touchobj[i].pageX
+            startY[i] = touchobj[i].pageY
+            startTime[i] = new Date().getTime() // время контакта с поверхностью сенсора
+  
+          }
+          EO.preventDefault()
+      }, false)
+    
+      touchsurface.addEventListener('touchmove', function(EO){
+          EO.preventDefault() // отключаем стандартную реакцию скроллинга
+      }, false)
+    
+      touchsurface.addEventListener('touchend', function(EO){
+        
+        var touchobj = EO.targetTouches;
+        if(touchobj.length!=3){
+          return false;
+        }
+
+        for(var i=0; i<=touchobj.length-1; i++ ){
+          dist[i] = touchobj[i].pageX - startX[i] // получаем пройденную дистанцию
+          elapsedTime[i] = new Date().getTime() - startTime[i] // узнаем пройденное время
+          // проверяем затраченное время,горизонтальное перемещение >= threshold, и вертикальное перемещение <= 100
+           swiperightBol[i] = (elapsedTime[i] <= allowedTime && dist >= threshold
+             && Math.abs(touchobj[i].pageY - startY[i]) <= 100)
+
+        }
+        var abcDelta=0;
+
+        for(var j=0; j<=swiperightBol.length-1; j++){
+          if(swiperightBol[j]==false){
+            abcDelta++;
+          }
+        }
+
+        if(abcDelta==0){
+          abcDelta=true;
+        }
+        else{
+          abcDelta=false;
+        }
+          handleswipe(abcDelta)
+          EO.preventDefault()
+      }, false)
+      
+    
+  } , false)
+    
 
 
 
