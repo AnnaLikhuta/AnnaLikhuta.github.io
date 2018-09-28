@@ -1690,7 +1690,7 @@ document.addEventListener('touchend',ontouchEnd, false);
 function ontouchStart(EO){
 
   var touchobj = EO.changedTouches[0];
-  if(EO.changedTouches.length==1)
+  if(EO.changedTouches.length==2)
   {dist = 0;
   startX = touchobj.pageX;
   startY = touchobj.pageY;
@@ -1705,7 +1705,7 @@ function ontouchMove (EO){
 
 function ontouchEnd (EO){
   console.log('ontouchEnd')
-  if(EO.changedTouches.length==1){
+  if(EO.changedTouches.length==2){
   var touchobj = EO.changedTouches[0]
   dist = touchobj.pageX - startX // получаем пройденную дистанцию
  // elapsedTime = new Date().getTime() - startTime // узнаем пройденное время
