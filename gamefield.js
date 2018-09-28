@@ -630,7 +630,7 @@ var conteinerFigure= document.getElementById('figure');
 
         if(nextStepObj.result.condition==true){
           gameAudio.play();
-          vibro(true);
+          vibro(false);
 
           }
         
