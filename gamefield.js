@@ -459,12 +459,12 @@ var conteinerFigure= document.getElementById('figure');
 
       // если касается двумя пальцами и больше
       // пропустить 3 касания для свайпа
-      if(EO.touches.length>1 && EO.touches.length!=3){
+      if(EO.touches.length>1 && EO.touches.length!=2){
         return false;
       }
 
         // если касается двумя пальцами и больше
-        if(EO.touches.length==1 || EO.touches.length==3){
+        if(EO.touches.length==1 || EO.touches.length==2){
           console.log('one touch')
         }
         
