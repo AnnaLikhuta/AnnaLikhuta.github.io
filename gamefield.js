@@ -1690,7 +1690,7 @@ document.addEventListener('touchend',ontouchEnd, false);
 function ontouchStart(EO){
 
   var touchobj = EO.changedTouches[0];
-  if(EO.changedTouches.length==1)
+  if(EO.changedTouches.length==2)
   {dist = 0;
   startX = touchobj.pageX;
   startY = touchobj.pageY;
