@@ -1688,12 +1688,14 @@ document.addEventListener('touchmove',ontouchMove, false);
 document.addEventListener('touchend',ontouchEnd, false);
 
 function ontouchStart(EO){
-  var touchobj = EO.changedTouches[0]
-  dist = 0;
+
+  var touchobj = EO.changedTouches[0];
+  if(EO.changedTouches.length==1)
+  {dist = 0;
   startX = touchobj.pageX;
   startY = touchobj.pageY;
  // EO.preventDefault();
-
+}
 }
 
 function ontouchMove (EO){
