@@ -1672,6 +1672,8 @@ function canDoubleStep(lastStepObj,nextStepObj ){
 
 // свайп для мобильного.
 // три пальца провести
+
+/*
 window.addEventListener('load', function(){
     
       var touchsurface = document.body,
@@ -1700,9 +1702,11 @@ window.addEventListener('load', function(){
          // три штуки
          
           var touchobj = EO.targetTouches;
+          
           if(touchobj.length!=3){
             return false;
           }
+        
           for(var i=0; i<=touchobj.length-1; i++){
             dist[i]=0;
             startX[i] = touchobj[i].pageX
@@ -1720,9 +1724,11 @@ window.addEventListener('load', function(){
       touchsurface.addEventListener('touchend', function(EO){
         
         var touchobj = EO.targetTouches;
+        
         if(touchobj.length!=3){
           return false;
         }
+       
 
         for(var i=0; i<=touchobj.length-1; i++ ){
           dist[i] = touchobj[i].pageX - startX[i] // получаем пройденную дистанцию
@@ -1752,12 +1758,60 @@ window.addEventListener('load', function(){
       
     
   } , false)
-    
+    */
+
+  var startX,
+   startY,
+   dist,
+   threshold = 150, // минимальное расстояние для swipe
+   allowedTime = 200, // максимальное время прохождения установленного расстояния
+   elapsedTime,
+   startTime,
+   // число касаний, которое обрабатываю
+
+   //countTouches=3,
+   swiperightBol 
 
 
+document.addEventListener('touchstart',ontouchStart, false);
+document.addEventListener('touchmove',ontouchMove, false);
+document.addEventListener('touchend',ontouchEnd, false);
+
+function ontouchStart(EO){
+  var touchobj = EO.changedTouches[0]
+  dist = 0;
+  startX = touchobj.pageX;
+  startY = touchobj.pageY;
+ // EO.preventDefault();
+
+}
+
+function ontouchMove (EO){
+ // EO.preventDefault();
+  console.log('ontouchMove')
 
 
+}
 
+function ontouchEnd (EO){
+  console.log('ontouchEnd')
+  var touchobj = EO.changedTouches[0]
+  dist = touchobj.pageX - startX // получаем пройденную дистанцию
+ // elapsedTime = new Date().getTime() - startTime // узнаем пройденное время
+  // проверяем затраченное время,горизонтальное перемещение >= threshold, и вертикальное перемещение <= 100
+  var swiperightBol = ( dist >= threshold && Math.abs(touchobj.pageY - startY) <= 100)
+  handleswipe(swiperightBol);
+  EO.preventDefault()
+
+}
+
+function handleswipe(isrightswipe){
+  if (isrightswipe)
+  countElemPlayer1.innerText='Свайп получился'
+  else{
+    countElemPlayer1.innerText='что-то другое'
+  }
+}
 
 
 
