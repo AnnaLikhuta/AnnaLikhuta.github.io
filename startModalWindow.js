@@ -90,11 +90,26 @@ function toShowRecords(EO){
     document.body.className='modal-active';
     modalRecords.className='one'
     EO.stopPropagation();
-    toWriteRecord();
-
+   // toWriteRecord();
+   console.log(recordsStorage.objInfo)
+   // нужно отсортировать. первые три/пять
+   // входит ли туда текущая игра
+  var playerWithRecord=Object.keys(recordsStorage.objInfo)||null;
+  
+   // отсортировать
+   playerWithRecord.sort(sortRecordsPlayer)
+   console.log(playerWithRecord);
+ 
+   if(playerWithRecord!=null ){
+     for(var i=0; i<=2; i++){
+    var deltaPlayer=recordsStorage.objInfo[playerWithRecord[i]]
+    var deltarecordsPlayerElem=document.getElementById('recordsPlayer'+(i+1)+'');
+    deltarecordsPlayerElem.innerText= playerWithRecord[i]+'  ' +'  Время   ' +deltaPlayer.stringTime;
+    }
+   }
   }
-
 }
+
 
 function toShowRules(EO){
   EO.preventDefault();

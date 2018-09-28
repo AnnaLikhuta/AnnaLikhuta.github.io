@@ -168,6 +168,7 @@ deleteOldGame.innerHTML=' ';
 startBaby();
 // спрятать
 gameDiv.style.zIndex='-1';
+console.log('here')
 // делаю ловушку для кликов по svg
 //elemForInserch.addEventListener('click',catchBadClick, false )
 // все обнулить, информацию
