@@ -13,13 +13,13 @@ function startTick (){
   if(cancelTimeGame){
     clearInterval(cancelTimeGame);
     cancelTimeGame=0;
-    console.log('winner');
 
   }
   startTime=new Date();
-   cancelTimeGame=setInterval(updateTime,200);
-   console.log('winner');
+  if( conditionAboutNamePlayer){
 
+   cancelTimeGame=setInterval(updateTime,200);
+  }
 }
 
 function updateTime() {
@@ -29,14 +29,11 @@ function updateTime() {
   var nowTime=new Date();
  var currTimeStr=formatDateTime(startTime, nowTime );
   timeElem.innerHTML= ' ' +currTimeStr ;
-  console.log(' timer  tick')
   if(winner.name) {
-    console.log('winner in timer')
     // записать время  для отображения в модальном окне
     winner.stringTime=currTimeStr;
     // время для записи в табл. рекордов
     winner.inNumberTime=nowTime-startTime;
-    console.log(winner);
     clearInterval(cancelTimeGame)
     //как сигнал, что игра окончена
     //вызвать функцию. появляется модальное окно
@@ -48,11 +45,6 @@ function updateTime() {
    saveInfoAboutPlayer();
 
     toWriteRecord();
-    //  а сработала ли?
-
-   // allCoctail ();
-   // убрать обводку у активного окна
-
       // кто  забил, или active
       // убрать обводку  модального  окна
       ElemPlayer1.classList.remove('active')

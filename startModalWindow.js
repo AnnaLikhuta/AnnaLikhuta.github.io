@@ -24,12 +24,8 @@ function getColorForPlayer(){
 // поле для ошибки
 var alarmElem=document.getElementById('alarm');
 
-
-
-
-
 //правильно ли форма заполнена. контроль
-var condition=false;
+var conditionAboutNamePlayer=false;
 
 // имена игроков для дальнейшей игры
 var firstNamePlayer, secondNamePlayer;
@@ -75,8 +71,6 @@ function modalRecordsToClose(EO){
   EO=EO|| window.event;
   if(EO.target==modalRecordsClose){
     modalRecords.className='one out';
-  //modalRulesClose.removeEventListener('click', closeModalWithoutName, false);
- // console.log('test call from closeModalRuleS');
   }
   EO.stopPropagation();
 
@@ -90,15 +84,12 @@ function toShowRecords(EO){
     document.body.className='modal-active';
     modalRecords.className='one'
     EO.stopPropagation();
-   // toWriteRecord();
-   console.log(recordsStorage.objInfo)
    // нужно отсортировать. первые три/пять
    // входит ли туда текущая игра
   var playerWithRecord=Object.keys(recordsStorage.objInfo)||null;
   
    // отсортировать
    playerWithRecord.sort(sortRecordsPlayer)
-   console.log(playerWithRecord);
  
    if(playerWithRecord!=null ){
      for(var i=0; i<=2; i++){
@@ -128,7 +119,6 @@ function closeModalRuleS(EO){
   EO=EO|| window.event;
   if(EO.target==modalRulesClose){
     modalRules.className='one out';
-  //modalRulesClose.removeEventListener('click', closeModalWithoutName, false);
   }
  EO.stopPropagation();
 
@@ -149,11 +139,11 @@ function beginNewGame(EO){
    //перерисовка
 
    var deleteOldGame=document.getElementById('game_field');
-   /*
-   // кто  забил, или active
-   console.log(player1);
-   console.log(player2);
-*/
+ winner={name:false,
+  stringTime: true,
+  inNumberTime:0,
+  color: false
+}
 
 
 deleteOldGame.innerHTML=' ';
@@ -178,23 +168,21 @@ timeElem.innerHTML='';
     EO=EO|| window.event;
     if(EO.target==modalCloseElem){
       modal.className='one out';
-    //  console.log('closeModalWithoutName')
-   //   modalCloseElem.removeEventListener('click', closeModalWithoutName, false);
-      getColorForPlayer();
-      whoCanStepFirst();
-    
-    }
+     var deleteOldGame=document.getElementById('game_field');
+  deleteOldGame.innerHTML=' ';
+  //обнулить, спрятать
+  gameWindowElem.style.opacity='0';
+   }
    EO.stopPropagation();
   }
 
 function toCloseModal (){
   // окно закроется, когда поля заполнены
-  if(condition==true){
+  if(conditionAboutNamePlayer==true){
   modal.className='one out'
   // записать нужные данные,имена
   firstNamePlayer=firstPlayerElem.value;
   secondNamePlayer=secondPlayerElem.value;
- // console.log(firstNamePlayer, secondNamePlayer )
   var firstElem=document.getElementById('first_player');
   firstElem.innerText=firstNamePlayer;
   
@@ -214,7 +202,6 @@ function toCloseModal (){
   else{
     alarmElem.innerText='введите имя';
     alarmElem.className='show_alarm';
-   // alert('введите имя')
   }
 }
 
@@ -227,7 +214,7 @@ function checkFom(EO){
   if(abc==''|| abc==' ' ){
   }
 else
-condition=true;
+conditionAboutNamePlayer=true;
 }
 
 
@@ -237,10 +224,8 @@ var paletteIndex = 0;
 
 setInterval( function() {
   
-  // Reset spans rotation without transitions
   container.className = 'no-transition';
   
-  // Debounce change to allow for css changes
   setTimeout( function() {
     container.style.color = palette[paletteIndex];
     container.className = 'transition';
@@ -256,10 +241,7 @@ setInterval( function() {
 function toShowWinner(){
   document.body.className='modal-active';
   modalWinner.className='one'
- // infoAboutWinner.style.color=''+winner.color+'';
   infoAboutWinner.innerText='Имя: '+winner.name+' Время: '+winner.stringTime+'';
-
-  console.log('test call from toShowWinner')
 }
 
 
@@ -268,12 +250,6 @@ function closeModalWinner(EO){
   EO=EO|| window.event;
   if(EO.target==modalWinnerClose){
     modalWinner.className='one out';
-  //  console.log('closeModalWithoutName')
- // modalWinnerClose.removeEventListener('click', closeModalWithoutName, false);
-  console.log('test call from closeModalWinner');
- // console.log('winner');
-
- // console.log(winner);
   }
  EO.stopPropagation();
 

@@ -3,7 +3,7 @@
  <html>
    <head>
      <meta charset="UTF-8">
-     
+     <meta name="viewport" content="width=device-width, initial-scale=1.0">
      <title>gameField-proj</title>
      <link href="cssGameAndFigure.css" rel="stylesheet">
      <link href="modalWindowCSS.css" rel="stylesheet">
@@ -70,23 +70,25 @@
          <div id="page_container" class="page_container"> 
 <div id="game_field" class="game_field"> </div>
 
- <div class="game-window">
+ <div class="game-window" id="game_window">
    <div class="player" id="conteiner_player1" >
-     <span id="first_player"><br></span>
+     <span id="first_player" class="name"><br></span>
      <span id="first_player_count" class="count"><br></span>
      <span id="first_player_color" class="color"><br> </span>
 
    </div>
-   <br>       <br>
+          
    <div class="player"  id="conteiner_player2">
-   <span id="second_player"><br></span>
+   <span id="second_player" class="name"><br></span>
    <span id="second_player_count" class="count"><br> </span>
    <span id="second_player_color" class="color"><br> </span>
   </div>
-  <br>       <br>
+       
   <div class="player player_time" id="time_conteiner"> 
-      <span >Игровое время</span>
-      <span id="time"></span>
+     
+      <span class="game-time">Игровое время</span>
+      <span id="time" class="game-time"><br> </span>
+      <span class="game-time" ><br> </span>
   </div>
  </div>
 
@@ -137,8 +139,8 @@
 
 
 <script src="gamefield.js"></script>
-<script src="startModalWindow.js"></script>
 
+<script src="startModalWindow.js"></script>
 <script src="tableRecords.js"></script>
 
 <script src="forTime.js"></script>

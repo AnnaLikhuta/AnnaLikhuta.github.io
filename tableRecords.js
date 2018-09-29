@@ -1,6 +1,3 @@
- 
-
-
 
 var ajaxHandlerScript="https://fe.it-academy.by/AjaxStringStorage2.php";
 var stringName='LIKHUTA_PROJECT_SHASHKI';
@@ -84,7 +81,6 @@ function AJAXStorage ( ){
  // добавить данные
  self.addValue = function (key,value){
   self.objInfo[key]=value; 
-  console.log(self.objInfo)
   saveAJAXStorage(self.objInfo)
 
       }
@@ -117,7 +113,6 @@ function AJAXStorage ( ){
 var recordsStorage= new AJAXStorage ();
 
 function saveInfoAboutPlayer() {
-  console.log('saveInfoAboutPlayer');
 
   var objWinner={
     'stringTime':winner.stringTime,
@@ -130,28 +125,19 @@ function saveInfoAboutPlayer() {
 
 function deleteCoctail (nameCoctail){
   var result = recordsStorage.deleteValue(nameCoctail);
-// result?console.log('Данный напиток успешно удален'):console.log('Данный напиток отсутствует');
 
 }
 
-function allCoctail (){
-  console.log('Имеются следующие напитки');
-  var result = recordsStorage.getKeys();
-  console.log( result.join(', ') );
-
-}
 // recordsStorage.objInfo - здесь все данные
 
 
 function toWriteRecord(){
-  console.log(recordsStorage.objInfo)
   // нужно отсортировать. первые три/пять
   // входит ли туда текущая игра
  var playerWithRecord=Object.keys(recordsStorage.objInfo)||null;
  
   // отсортировать
   playerWithRecord.sort(sortRecordsPlayer)
-  console.log(playerWithRecord);
 
   if(playerWithRecord!=null ){
     for(var i=0; i<=2; i++){
@@ -162,15 +148,22 @@ function toWriteRecord(){
   }
 
  // удалить все  записанные рекорды
- // deleteAll ();
+ //deleteAll ();
 var deleteOldGame=document.getElementById('game_field');
 deleteOldGame.innerHTML=' ';
-startBaby();
+
+//обнулить
+winner={name:false,
+  stringTime: true,
+  inNumberTime:0,
+  color: false
+}
+
 // спрятать
 gameDiv.style.zIndex='-1';
-console.log('here')
+gameWindowElem.style.opacity='0';
+
 // делаю ловушку для кликов по svg
-//elemForInserch.addEventListener('click',catchBadClick, false )
 // все обнулить, информацию
 countElemPlayer1.innerHTML='<br>';
 countElemPlayer2.innerHTML='<br>';

@@ -10,7 +10,6 @@ ul.menu  {margin: 0px; padding:0px; list-style: none; text-align: center;}
 
 .menu> li {max-height: 70px;
   min-height:30px;
-   height: ;
     width: 30%;
     max-width: 200px; 
      min-width: 130px; 
@@ -27,10 +26,9 @@ position: relative;
        color: white;
        height:120%;   }
 
-ul li:first-child { margin-left: 0;}.
+ul li:first-child { margin-left: 0;}
 .menu> li:before { content: '';
    height: 5px; 
-   background-color:;
     width: 100%;
      position: absolute;
       top:0;
@@ -48,7 +46,6 @@ ul li:first-child { margin-left: 0;}.
 /* контейнер, чтобы нормальноотображалось*/
 .page_container {
   
-  border: ;
   text-align: center;
   
 }
@@ -77,7 +74,7 @@ ul li:first-child { margin-left: 0;}.
   border: 2px solid black;
   border-radius: 2%;
   box-shadow: inset 2px  2px  15px 0px white,-2px -2px 10px 0px white;
- 
+ margin-bottom: 5%;
 }
 .player_time{
   min-height: 70px;
@@ -85,7 +82,7 @@ ul li:first-child { margin-left: 0;}.
 }
 .player span {
   text-align: center;
-  font-size: 150%;
+  font-size: %;
   color: white;
   display: block;
   margin: 2%;
@@ -114,14 +111,24 @@ ul li:first-child { margin-left: 0;}.
   }
 }
 
+.player .name {
+  font-size: calc(100vw / 35);
+color:white;
+}
+
 .player .count {
-  font-size: calc(100vw / 32);
+  font-size: calc(100vw / 35);
 color:white;
 }
 
 .player .color{
-  font-size: calc(100vw / 38);
+  font-size: calc(100vw / 35);
   color:aqua;
+  
+}
+.game-time{
+  font-size: calc(100vw / 35);
+  color:white;
   
 }
 
@@ -130,3 +137,95 @@ color:white;
 .game_field{
   display: inline-block;
 }
+
+/* медиазапросы */
+
+@media (max-width: 800px) {
+  .game_field{
+    width: 100%;
+  }
+  .game-window {
+    
+    display: inline-block;
+    width: 100%;
+    display: inline;
+    margin-left: 1%;
+    margin-top: 1%;
+    min-width: 30px;
+  }
+
+.player {
+  width: 30%;
+  min-height: 30px;
+  display: inline-block;
+  min-height: 30px;
+  margin-bottom: 2%;
+}
+.player span {
+  color: aqua;
+  display: block;
+  margin: 1%;
+}
+}
+
+@media (max-width: 600px) {
+  .game-window {
+    
+    display: inline-block;
+    width: 100%;
+    display: inline;
+    margin-left: 1%;
+    margin-top: 1%;
+    min-width: 20px;
+  }
+
+.player {
+  width: 20%;
+  display: inline-block;
+  min-height: 20px;
+  margin-bottom: 1%;
+}
+.player span {
+  display: block;
+  margin: 1%;
+}
+
+.player .name {
+  font-size: calc(100vw / 50);
+}
+
+.player .count {
+  font-size: calc(100vw / 50);
+}
+
+.player .color{
+  font-size: calc(100vw / 50);
+  
+}
+.game-time{
+  font-size: calc(100vw / 50);
+  
+}
+}
+
+
+@media (max-width: 500px) {
+  .menu> li {max-height: 70px;
+    min-height:20px;
+      width: 30%;
+      max-width: 30%; 
+       min-width: 90px; 
+    }
+     
+  .menu a {display: block;  
+      font-size:calc(100vw / 50);; 
+        padding-top: 3%;
+         height:80%; 
+          }
+  
+  ul li:first-child { margin-left: 0;}
+  .menu> li:before { content: '';
+     height: 2px; 
+        }
+}
+
