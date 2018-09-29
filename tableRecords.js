@@ -160,7 +160,7 @@ winner={name:false,
 }
 
 // спрятать
-gameDiv.style.zIndex='-1';
+//gameDiv.style.zIndex='-1';
 gameWindowElem.style.opacity='0';
 
 // делаю ловушку для кликов по svg
