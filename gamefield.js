@@ -1428,10 +1428,9 @@ function handleswipe(isrightswipe){
 
 
 }
-/*
+
 window.onbeforeunload = function() {
   alert('Данные будут потеряны')
 
   return 'Данные будут потеряны';
 };
-*/

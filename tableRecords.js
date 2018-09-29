@@ -134,7 +134,7 @@ function deleteCoctail (nameCoctail){
 function toWriteRecord(){
   // нужно отсортировать. первые три/пять
   // входит ли туда текущая игра
- var playerWithRecord=Object.keys(recordsStorage.objInfo)||null;
+  var playerWithRecord=Object.keys(recordsStorage.objInfo)||null;
  
   // отсортировать
   playerWithRecord.sort(sortRecordsPlayer)
@@ -146,9 +146,7 @@ function toWriteRecord(){
    deltarecordsPlayerElem.innerText= playerWithRecord[i]+'  ' +'  Время   ' +deltaPlayer.stringTime;
    }
   }
-
- // удалить все  записанные рекорды
- //deleteAll ();
+ 
 var deleteOldGame=document.getElementById('game_field');
 deleteOldGame.innerHTML=' ';
 
@@ -188,3 +186,5 @@ timeElem.innerHTML='';
  return recordsStorage.objInfo[a].inNumberTime-recordsStorage.objInfo[b].inNumberTime;
 
  }
+ // удалить все  записанные рекорды
+// deleteAll ();
