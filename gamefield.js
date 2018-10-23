@@ -842,6 +842,17 @@ document.ondragstart = function() {
         if(about.arrFigure[posForStepArr[i]].color==nextStepObj.colorFigure){
           nextStepObj.posFigure[posForStepArr[i]].condition=false;
         }
+
+        if(  (posForStepArr[0] in about.arrFigure ) && !(posForStepArr[1] in about.arrFigure)  )
+        {
+         nextStepObj.posFigure[posForStepArr[1]].condition=false;
+       }
+
+       if(  (posForStepArr[1] in about.arrFigure ) && !(posForStepArr[0] in about.arrFigure)  )
+       {
+        nextStepObj.posFigure[posForStepArr[0]].condition=false;
+      }
+
         // если шашка другого цвета,то подсветить на клетку больше
         
         else if( about.arrFigure[posForStepArr[i]].color!=nextStepObj.colorFigure ){
