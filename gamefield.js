@@ -1,4 +1,5 @@
-   //  найти объекты по ID
+
+//  найти объекты по ID
 var ElemPlayer1=document.getElementById('conteiner_player1');
 var ElemPlayer2=document.getElementById('conteiner_player2');
 
@@ -78,9 +79,6 @@ var modalRecordsClose=document.getElementById('modal_background_records');
 
 // где сама игра
 var elemForInserch=document.getElementById('game_field');
-
-// контейнер модальных оконо про игроков
-var gameWindowElem=document.getElementById('game_window');
  // для свайпа
  var startX,
  startY,
@@ -106,14 +104,19 @@ var gameWindowElem=document.getElementById('game_window');
       var elemForInserch=document.getElementById('game_field')
       elemForInserch.appendChild(gameDiv)
 
-      // 
-      gameWindowElem.style.opacity=1;
       gameDiv.className='gameDiv';
       gameDiv.id='gameDiv';
       var start= document.createElementNS('http://www.w3.org/2000/svg', 'svg'); 
       start.setAttribute("id", 'start');
       gameDiv.appendChild(start);
-      start.setAttribute('viewBox','0 0'+' '+mainSizeWidth+' '+mainSizeHeight)
+
+    // если оставлять этот вариант, то див и свг  создать в html
+      // получить див, куда вставлять svg-игровое поле
+    // var gameDiv=document.getElementById('gameDiv');
+        // создать svg поле. резиновые размеры
+      // start= document.createElementNS('http://www.w3.org/2000/svg', 'svg'); 
+    //  var start=document.getElementById('start')
+        start.setAttribute('viewBox','0 0'+' '+mainSizeWidth+' '+mainSizeHeight)
       start.style.width='100%';
       start.style.height='100%';
 
@@ -135,6 +138,8 @@ var gameWindowElem=document.getElementById('game_window');
 
     bigRect.setAttribute("fill", "aqua");
     start.appendChild(bigRect);
+    //gameDiv.appendChild(start);
+
       // массив для клеток
       function getNumberArr(){
         var numberArr=[],pos;  
@@ -146,6 +151,7 @@ var gameWindowElem=document.getElementById('game_window');
         return numberArr; }
         
     var numberArr=getNumberArr(); // для  перебора. чтобы искать  ["11", "21", "31...
+      //console.log(numberArr)
     
     
           // для отрисовки квадратов. базовая точка
@@ -205,6 +211,10 @@ var gameWindowElem=document.getElementById('game_window');
           y+=sizeForGameSquare;  // нарастание по оси У
           }
           start.appendChild(groupCircle);
+          
+        //  console.log(objPos )
+        // console.log('black '+blackCell )
+        // console.log('white '+whiteCell )
           return {
             blackCell: black,
             whiteCell: white,
@@ -215,6 +225,7 @@ var gameWindowElem=document.getElementById('game_window');
       // разбивка клеток по цветам
       // глобалный объект с важной информацией
       var about= createGameBigSquare();
+          console.log(about )
 
       //вставить прямоугольники с подписями
 
@@ -253,6 +264,8 @@ var gameWindowElem=document.getElementById('game_window');
         return deltaArr;
       })();
     
+
+      //
         for(var j=0; j<=7;j++){
           var txt=document.createElementNS("http://www.w3.org/2000/svg",'text');
       
@@ -307,6 +320,7 @@ var gameWindowElem=document.getElementById('game_window');
         for (var j=blackCellGame.length-1; j>=blackCellGame.length-12;j-- ){
 
       var  cx=about.posForSquare[blackCellGame[j]].posX+sizeForGameSquare/2; // координаты по квадрату. верхний левый угол
+        //console.log(cx )
           // от верхей левой точки отнимаем половину ширины клетки квадрата. чтоб знать центр по Х и У
           var cy=about.posForSquare[blackCellGame[j]].posY+sizeForGameSquare/2;
           arrFigure[blackCellGame[j]]={color:'magenta'}
@@ -325,10 +339,12 @@ var gameWindowElem=document.getElementById('game_window');
           
         }
         start.appendChild(groupFigure);
+      //console.log(arrFigure)
       return arrFigure; // объект где все позиции  шашек -> 11:{color: "magenta"}
     }
       // добавить в общий объект. потом распределить по игрокам
         about.arrFigure= setFigure();
+      //  console.log(about)
 
     //  перетаскивать по  экрану шашки
     // элемент g куда поместила все шашки
@@ -336,11 +352,15 @@ var gameWindowElem=document.getElementById('game_window');
 
     // добавить в глобальный объект about.кто  дамка
     about.king={}
+
     // учитывать в глобальном объекте, чей ход.  по очереди
     about.whoCanStep={};
     about.whoCanStep={color:true,
                       id: true, 
                       translate: true}
+
+
+
 
     // создать класс игрока
 
@@ -358,7 +378,13 @@ var gameWindowElem=document.getElementById('game_window');
       player2=new Player();
       
       var numbRandomArr=getRandomNumber();
+    // console.log(numbRandomArr);
       changePlayerState();
+    // getColorForPlayer();
+    // console.log(player1, player2);
+
+
+
 
     // для рандомного значения 0 или 1
     // первая цифра: 0 - цвет magenta, 1- aqua
@@ -375,6 +401,13 @@ var gameWindowElem=document.getElementById('game_window');
     var objAboutStatePlayer=whoActiveOrPassivePlyer();
     var activePlayer=objAboutStatePlayer.activePlayer;
     var passivePlayer=objAboutStatePlayer.passivePlayer
+    console.log('activePlayer')
+
+    console.log(activePlayer)
+    console.log('passivePlayer')
+
+    console.log(passivePlayer)
+
 
     // распределить значения по игрокам
       function changePlayerState(){
@@ -396,22 +429,29 @@ var gameWindowElem=document.getElementById('game_window');
           player1.active=true;
           player2.active=false;
         }
+
     }
 
       function whoActiveOrPassivePlyer(){
         if(player1.active==true){
           // дать знать, кто ходит первым
           // определить active/passive
+      //   countElemPlayer1.innerText='Ваш ход первым';
+        // console.log(player1,player2)
           return {activePlayer:player1,
                   passivePlayer:player2}
         }
         if(player1.active==false ){
+      //   countElemPlayer2.innerText='Ваш ход первым';
 
           return {passivePlayer:player1,
                 activePlayer:player2}
 
         }
       }
+
+
+
 
 var conteinerFigure= document.getElementById('figure');
 
@@ -422,6 +462,7 @@ var conteinerFigure= document.getElementById('figure');
    function beginerMoveForTouch(EO){
      EO=EO|| window.event;
      EO.preventDefault();
+     console.log(EO.targetTouches)
 
       document.addEventListener('touchstart',ontouchStart, false);
       document.addEventListener('touchmove',ontouchMove, false);
@@ -436,7 +477,11 @@ var conteinerFigure= document.getElementById('figure');
 
         // если касается двумя пальцами и больше
         if(EO.touches.length==1 || EO.touches.length==3){
+          console.log('one touch')
         }
+        
+     console.log('следующий ход')
+   
      // хранить информацию про старый ход, текущий
      var lastStepObj={};
      // хранить про следующую позицию
@@ -467,6 +512,8 @@ var conteinerFigure= document.getElementById('figure');
      lastStepObj.currentIDSquare=currentIDSquare;
    
      //  а это фигура есть в дамках? проверить в about.king
+    // console.log(about)
+    // console.log(currentIDSquare)
    
      if( currentIDSquare in about.king ){
        lastStepObj.typeStep=3;
@@ -503,6 +550,7 @@ var conteinerFigure= document.getElementById('figure');
        {checFigure(lastStepObj,nextStepObj)}
        if(lastStepObj.typeStep==3){
          // вызов другого  checFigureю был в legalyPos
+        // console.log(3)
        }
    
      // а ходила раньше фигура
@@ -513,7 +561,13 @@ var conteinerFigure= document.getElementById('figure');
       // подсветить клетки, у которых true
       toLightSquare(nextStepObj);
    
+      console.log(lastStepObj);
+      console.log(nextStepObj);
+   
        // записать цвет фигуры, для контроля хода
+    //
+    // about.whoCanStep.color=colorFigure;
+   
       // срабатывает только на фигура
     conteinerFigure.ontouchmove = moveAtTouch;
    
@@ -543,12 +597,16 @@ var conteinerFigure= document.getElementById('figure');
 
        currentGigure.ontouchend = function(EO) { //когда закончилось перетаскивание
          // неудачно передавался в параметры  aboutStepObj вместе с ЕО
+         console.log(touchInfo)
          EO=EO|| window.event;
          EO.preventDefault();
          // при touchend нет касания. берем последнее,которое осталось при ontouchmove
 
+        //  touchInfo=EO.targetTouches[0];
+
           pageX=touchInfo.pageX;
          pageY=touchInfo.pageY;
+         console.log(pageX,pageY )
          // проверить, отпущен ли клик в нужных координатах
          nextStepObj.result= whereMouseUp(pageX,pageY,nextStepObj, lastStepObj )
          whoCanStepFun(lastStepObj,nextStepObj);
@@ -557,6 +615,8 @@ var conteinerFigure= document.getElementById('figure');
              // записать цвет фигуры, для контроля хода
       
        about.whoCanStep.color=colorFigure;
+      
+               
        if(nextStepObj.result.condition) {
            // обрать обводку клетки и обновить массив. скорректиров глоб объекты
          changeGameObjPosFigure(nextStepObj,lastStepObj);
@@ -567,11 +627,13 @@ var conteinerFigure= document.getElementById('figure');
        // если неверное перемещение - вернуть на первоначальную позицию
        if(!nextStepObj.result.condition){
          paintNiceFirure(currentGigure,nextStepObj,oldPosition);
+     
        }
        
        // стала ли фигра дамкой. естьтакая
       var haveKing= toBecomeKing(nextStepObj);
       if(haveKing ){
+        console.log('рисовать корону');
         toDrawKing(nextStepObj);
       }
      
@@ -585,10 +647,13 @@ var conteinerFigure= document.getElementById('figure');
           vibro(true);
 
           }
+        
+
+          
           // проверка на победу
 // проверка на  конец игры. все фигуры одного цвета остались
 // сделать анимацию
-if( Object.keys(about.arrFigure).length<=14){   //14
+if( Object.keys(about.arrFigure).length<=24){   //14
  
   winner.name=victory();
   if( winner.name){
@@ -596,8 +661,11 @@ if( Object.keys(about.arrFigure).length<=14){   //14
     // модальное окно - фон анимация
     // еще отсчитать сколько времени играла
     // это и пойдет в таблицу рекордов
+  console.log('winner no false')
   }
    }
+
+     
        // то,что ниже в самую последнюю очередь
          document.ontouchmove = null;
          currentGigure.ontouchend = null;
@@ -608,8 +676,17 @@ if( Object.keys(about.arrFigure).length<=14){   //14
      }
      
    document.ondragstart = function() {
+     
      return false;
      };
+    
+     // удалить все "aqua"
+     //v исключительно для тестировки
+   //  deleteAllAqua();
+   
+   
+         console.log(about)
+   
    }
 //------------------------------------ конец touch-------------------------------------------
 
@@ -623,8 +700,10 @@ var countGame=0;
 
 function beginerMove(EO){
   EO=EO|| window.event;
+  console.log('следующий ход')
 
   // сохранять следующие доступные шаги
+ // var posFigure={};
 
   // хранить информацию про старый ход, текущий
   var lastStepObj={};
@@ -634,6 +713,16 @@ function beginerMove(EO){
  nextStepObj.forFightFigure={}
  // для записи отметки дамка
  // добавить в глобальный объект about
+ //about.king={}
+
+
+
+// добавить ход
+ // activePlayer.timeStep=activePlayer.timeStep+1;
+
+ 
+
+
  // для учета типа step - normal/fight/king -1/2/3
  // первоначально все ходят нормально
  var typeStep=1;
@@ -654,6 +743,8 @@ function beginerMove(EO){
   lastStepObj.currentIDSquare=currentIDSquare;
 
   //  а это фигура есть в дамках? проверить в about.king
+ // console.log(about)
+ // console.log(currentIDSquare)
 
   if( currentIDSquare in about.king ){
     lastStepObj.typeStep=3;
@@ -680,14 +771,23 @@ function beginerMove(EO){
 
  // записать в контроль хода. записать в процессе
  //  about.whoCanStep.color=colorFigure;
+
+
+
   // получить возможные,правильные клетки для хода. уже проверили
  nextStepObj.posFigure=legalyPos(lastStepObj.colorFigure,lastStepObj.currentIDSquare,
    lastStepObj.typeStep,"transferSquare", nextStepObj);
 
+   console.log(nextStepObj.posFigure);
+
+ //nextStepObj.posFigure=abc;
  //  а есть ли на этих позициях шашки
     if(lastStepObj.typeStep==1)
     {checFigure(lastStepObj,nextStepObj)}
     if(lastStepObj.typeStep==3){
+      // вызов другого  checFigureю был в legalyPos
+     // console.log(3)
+
     }
 
   // а ходила раньше фигура
@@ -698,8 +798,13 @@ function beginerMove(EO){
    // подсветить клетки, у которых true
    toLightSquare(nextStepObj);
 
+   console.log(lastStepObj);
+   console.log(nextStepObj);
 
     // записать цвет фигуры, для контроля хода
+ //
+ // about.whoCanStep.color=colorFigure;
+
    
   document.onmousemove = function(EO) {
     moveAt(EO);
@@ -714,6 +819,7 @@ function beginerMove(EO){
    var  clickPageY=clickCoordObj.pageY;
     currentGigure.setAttribute("cx", clickPageX);
     currentGigure.setAttribute("cy", clickPageY);
+    // нужна ли  эта обводка???
     // у дамки остается белая обводка
     if(nextStepObj.typeStep==1 ||
       nextStepObj.typeStep==2){
@@ -728,18 +834,24 @@ function beginerMove(EO){
     EO=EO|| window.event;
     var pageX=EO.pageX;
     var pageY=EO.pageY;
+  //  console.log(aboutStepObj)
 
   // записать цвет фигуры, для контроля хода
+
+
     // проверить, отпущен ли клик в нужных координатах
     nextStepObj.result= whereMouseUp(pageX,pageY,nextStepObj, lastStepObj );
 
     whoCanStepFun(lastStepObj,nextStepObj);
+
     about.whoCanStep.translate=false;
 
         
         // записать цвет фигуры, для контроля хода
  
   about.whoCanStep.color=colorFigure;
+ 
+          
   if(nextStepObj.result.condition) {
       // обрать обводку клетки и обновить массив. скорректиров глоб объекты
     changeGameObjPosFigure(nextStepObj,lastStepObj);
@@ -756,6 +868,7 @@ function beginerMove(EO){
   // стала ли фигра дамкой. естьтакая
  var haveKing= toBecomeKing(nextStepObj);
  if(haveKing ){
+   console.log('рисовать корону');
    toDrawKing(nextStepObj);
  }
 
@@ -763,6 +876,7 @@ function beginerMove(EO){
   deleteFigureOnDesk(nextStepObj);
 //записать очки
  toWriteCount(nextStepObj);
+// canDoubleStep(lastStepObj,nextStepObj );
 
 // добавить звук,когда удачный/правильный ход/перемещение фигуры
 if(nextStepObj.result.condition==true){
@@ -774,7 +888,7 @@ vibro(true);
 // проверка на победу
 // проверка на  конец игры. все фигуры одного цвета остались
 // сделать анимацию
-if( Object.keys(about.arrFigure).length<=14){   //14
+if( Object.keys(about.arrFigure).length<=24){   //14
  
     winner.name=victory();
     if( winner.name){
@@ -782,10 +896,12 @@ if( Object.keys(about.arrFigure).length<=14){   //14
       // модальное окно - фон анимация
       // еще отсчитать сколько времени играла
       // это и пойдет в таблицу рекордов
+    console.log('winner no false')
     }
      }
 
   // то,что ниже в самую последнюю очередь
+   // console.log(result)
     document.onmousemove = null;
     currentGigure.onmouseup = null;
     nextStepObj=null;
@@ -797,6 +913,13 @@ document.ondragstart = function() {
   
   return false;
   };
+ 
+  // удалить все "aqua"
+  //v исключительно для тестировки
+//  deleteAllAqua();
+
+
+
 
      
 }
@@ -830,40 +953,110 @@ document.ondragstart = function() {
     var posFigure={}
         //какие позиции предлагает
         // вернуть нормальный тип хода
+      //  lastStepObj.typeStep==1;
     // массив из допустимых ходов
     var posForStepArr=Object.keys(nextStepObj.posFigure);
+  //  console.log(nextStepObj.posFigure)
+
+    // есть ли на этих позициях шашки
+    /*
+    if(lastStepObj.typeStep==3){
+      console.log('typeStep=3')
+      // другая  checFigure для  king
+      return;
+    }
+    */
+   console.log(nextStepObj.posFigure);
+
+
+
     for( var i=0; i<=posForStepArr.length-1; i++){
       if (posForStepArr[i] in about.arrFigure  ){
+      //  console.log(posForStepArr[i])
 
               // если шашка такого же цвета
               // 2 позиции. стандартные. +1 клетка в стороны
+
               // стоит фигура на этой клетке такого же цвета
 
         if(about.arrFigure[posForStepArr[i]].color==nextStepObj.colorFigure){
           nextStepObj.posFigure[posForStepArr[i]].condition=false;
         }
+        console.log(posForStepArr[0])
+
+      //  console.log(about.arrFigure.posForStepArr[0].color)
+
+
         // если шашка другого цвета,то подсветить на клетку больше
         
-        else if( about.arrFigure[posForStepArr[i]].color!=nextStepObj.colorFigure ){
+         if( about.arrFigure[posForStepArr[i]].color!=nextStepObj.colorFigure ){
           // не подходит  эта позиция, зафиксировать
           lastStepObj.typeStep=2;
 
           nextStepObj.posFigure[posForStepArr[i]].condition=false;
+
+
           // узнать другую позицию. следующую
+
           // здесь новая позиция. а есть ли здесь фигура
          var posFigure= legalyPos(lastStepObj.colorFigure,lastStepObj.currentIDSquare,
              lastStepObj.typeStep,posForStepArr[i],nextStepObj );
+           //  console.log(posFigure)
+
              // вернул одну позицию. узнать ключ
              var nextForStep=Object.keys(posFigure);
+            // console.log(posFigure)
 
              if((nextForStep[0] in about.arrFigure)!=true ){
                // если нет фигуры. нужна эта позиция
                nextStepObj.posFigure[nextForStep[0]]={condition:true};
+               // записать для nextStepObj.forFightFigure  в значении-куда надо встать,чтобы убрать
+               
+
                nextStepObj.forFightFigure[nextForStep[0]]=posForStepArr[i] ;
+
+             //  nextStepObj.forFightFigure[posForStepArr[i]]={[nextForStep[0]]:true} ;
+
              }
         }
       }
     }
+   // return aboutStepObj;
+   //lastStepObj.typeStep=1;
+
+
+   /*
+      
+       if( (posForStepArr.length<=1) ) {
+            // ничего
+          }
+       else if( (posForStepArr.length>1) &&
+          (posForStepArr[0] in about.arrFigure) && (posForStepArr[1] in about.arrFigure)  ){
+            // ничего
+          }
+
+        else if( (posForStepArr.length>1) && 
+       ( (posForStepArr[0] in about.arrFigure)==true) && ( (posForStepArr[1] in about.arrFigure)==false) &&
+       (nextStepObj.color!=about.arrFigure[posForStepArr[0]].color)
+       ) {
+        nextStepObj.posFigure[posForStepArr[1]].condition=false;
+        console.log('catch  0')
+        console.log(about.arrFigure[posForStepArr[0]].color)
+
+       }
+       
+       else if( (posForStepArr.length>1) && 
+       ( ( (posForStepArr[1] in about.arrFigure)==true) && ( (posForStepArr[0] in about.arrFigure)==false) &&
+        (nextStepObj.color!=about.arrFigure[posForStepArr[1]].color))
+        ) {
+         nextStepObj.posFigure[posForStepArr[0]].condition=false;
+         console.log('catch  1')
+         console.log(about.arrFigure[posForStepArr[1]].color)
+
+        }
+ 
+       */
+
   }
 
     // узнать клетки, куда могу ходить
@@ -875,14 +1068,57 @@ document.ondragstart = function() {
      currentIDSquare=+currentIDSquare;
      // надо ли тут posFigure.по идее - да
      var posFigure={};
+    // удалить опредыдущем  ходе, если другой цвет
+    /*
+     if(about.whoCanStep.color!= colorFigure){
+      about.whoCanStep.id=true;
+     }
+     */
+     /*
+     // оычный первый ход
+  if(activePlayer.color!=colorFigure && activePlayer.timeStep==0){
+    console.log('у вас нет права ходить')
+    return posFigure;
+
+  } 
+  */
+
+     // если цвета совпадают. повторный ход недопустить (но если бил  до этого - нужно пропустить)
+     //одинаковые цвета?
+     // била до этого?
+     // от случайных ходов не спасает.
+     /*
+     console.log(about)
+
+     if((about.whoCanStep.color== colorFigure && currentIDSquare!=about.whoCanStep.id &&
+      about.whoCanStep.translate==true ) 
+   ){
+      posFigure[currentIDSquare]={condition:true};
+      console.log('вы уже ходили ')
+      return posFigure;
+
+
+     }
+     
+*/
  
   // обычный ход
   if((colorFigure==activePlayer.color && activePlayer.active==true )||
     ( passivePlayer.active==false && activePlayer.timeStep>0) ){
+
+    //  if(currentIDSquare!=about.whoCanStep.id )
+     // console.log(activePlayer);
+    //  console.log(passivePlayer);
+
+    //  console.log('фильтр')
+
       if(activePlayer.timeStep>0 && currentIDSquare!=about.whoCanStep.id &&
         colorFigure==activePlayer.color){
+          console.log('eeeeee')
           //дернули не ту. ходить должен противоположный цвет
           activePlayer.timeStep=-1;
+          //  console.log(activePlayer);
+        //  console.log(passivePlayer);
           return posFigure;
         }
   }
@@ -890,6 +1126,13 @@ document.ondragstart = function() {
   else {
     return posFigure;
   }
+
+
+//------
+ // console.log(player1.color);
+ // console.log(player2.color);
+
+
     // узнать клетки, куда могу ходить
     // обычный ход
        if(typeStep==1)   {
@@ -905,6 +1148,7 @@ document.ondragstart = function() {
 // вызов из checkFigure
 
     if(typeStep==2 ){
+     // console.log('currentIDSquare')
 
       if(colorFigure=='magenta'){
         // в левую сторону
@@ -923,12 +1167,16 @@ document.ondragstart = function() {
         if(transferSquare> currentIDSquare)
           forNextStep.push( currentIDSquare+20-2);
         }
+        
       }
 // ходит дамка
 
       if(typeStep==3){
         // изменяются  клетки  -9 +9 -11 +11
         forNextStep= forNextStep.concat(  (toFindPosForKing(currentIDSquare, 9,colorFigure,nextStepObj )) )
+        console.log(forNextStep)
+        console.log(nextStepObj)
+
         // здесь  хорошо проверять. разбито по 4-ем направлениям
 
         forNextStep= forNextStep.concat((toFindPosForKing(currentIDSquare, -9,colorFigure,nextStepObj )))
@@ -936,6 +1184,8 @@ document.ondragstart = function() {
         forNextStep= forNextStep.concat((toFindPosForKing(currentIDSquare, 11,colorFigure ,nextStepObj)))
 
         forNextStep= forNextStep.concat((toFindPosForKing(currentIDSquare, -11,colorFigure ,nextStepObj)))
+
+       // console.log(forNextStep)
     }
 
     //вернуть адекватные значения
@@ -950,6 +1200,15 @@ document.ondragstart = function() {
       // если был пуст, записать предыдущую позицию
       posFigure[currentIDSquare]={condition:true}
     }
+    // не  вносить изменения  в глоб объект nextStepObj
+    /*
+    if(typeStep==2){
+      return posFigure;
+
+    }
+    */
+    // записать глобально
+  //  nextStepObj.posFigure=posFigure;
    return posFigure;
    }
 
@@ -959,11 +1218,16 @@ document.ondragstart = function() {
     // есть ли эта фигра/клетка в записи  whoCanStep
     if((lastStepObj.currentIDSquare == about.whoCanStep.id) &&
     forFight.length!=0 ){
+    //  console.log('верный ход')
+
     }
     else {
+      //console.log('неверный ход. обработать');
     //если нечего бить, то в каждую допустимую позицию для хода condition=false
     // и ходить некуда
     var badPos=Object.keys(nextStepObj.posFigure);
+   // console.log(badPos)
+
     for(var i=0; i<=badPos.length-1; i++){
       nextStepObj.posFigure[badPos[i]].condition=false;
     }
@@ -1012,19 +1276,24 @@ document.ondragstart = function() {
                
             // проверить следующую клетку
           // добавить к тем, которые можно бить
+          console.log(nextStepObj)
+         // nextStepObj.forFightFigure={[saveCurrentIDSquare]: true}
                 
           nextStepObj.forFightFigure[abc]=saveCurrentIDSquare ;
             arr.push(saveCurrentIDSquare+changeNumber);
             return arr;
               }
+          
           }
 
        // добавить
        arr.push(saveCurrentIDSquare);
+
       }
       // иначе выход
       else  saveCurrentIDSquare=0;
   }
+ // console.log(arr)
 return arr;
   }
 
@@ -1035,6 +1304,7 @@ return arr;
    function toLightSquare(nextStepObj){
         // подсветить клетки, у которых true
         var squareIDForAttention=Object.keys(nextStepObj.posFigure);
+        // console.log(squareIDForAttention)
      
          for(var i=0; i<=squareIDForAttention.length-1; i++){
            if(nextStepObj.posFigure[squareIDForAttention[i]].condition==true ){
@@ -1083,6 +1353,7 @@ var delta=widthConteinerDiv/mainSizeWidth;
     var  clickPageY=clickCoordObj.pageY;
     // проверка где отпущен  клик
     var squareIDForAttention=Object.keys(nextStepObj.posFigure);
+    //console.log(squareIDForAttention )
     for(var i=0; i<=squareIDForAttention.length-1; i++){
 
     if(nextStepObj.posFigure[squareIDForAttention[i]].condition==true ){
@@ -1098,7 +1369,21 @@ var delta=widthConteinerDiv/mainSizeWidth;
    else continue;
   }
    }
+   // эту ошибку обработать.более точно
+   //отпущен клик не в подсвеченных элементах
+   console.log('клик не в новом квадрате отпущен');
    deleteStrokeOnFigure(nextStepObj);
+  // about.whoCanStep.color=true;
+  // неосторожный  ход. дать еще один шанс
+  /*
+  //реализовано в дополнит функции canDoubleStep
+  //-----------------------------------------------------------------------------------------
+if(lastStepObj.currentIDSquare in nextStepObj.posFigure){
+  
+ // console.log('eeee')
+   about.whoCanStep.color=true;
+}
+*/
   return {condition:false,
           newPositionID:false} }
 
@@ -1110,28 +1395,37 @@ var delta=widthConteinerDiv/mainSizeWidth;
           
           lastStepObj.colorFigure==activePlayer.color &&
           Object.keys(nextStepObj.forFightFigure).length==0)){
+    console.log('меняем player');
     activePlayer.active=false;
     passivePlayer.active=true;
     activePlayer.timeStep=0;
+    console.log(activePlayer);
     if(activePlayer.active==false ){
       var abc = activePlayer;
       activePlayer=passivePlayer;
       passivePlayer=abc;
     }
+
           }
+
+          
+       //   console.log(activePlayer);
         // побили фигуру
         if(nextStepObj.result.condition==true &&
          
           lastStepObj.colorFigure==activePlayer.color &&
           Object.keys(nextStepObj.forFightFigure).length>0){
+    console.log('побили фигуру');
     activePlayer.timeStep=activePlayer.timeStep+1;
     activePlayer.active=true;
     passivePlayer.active=false;
+    console.log(activePlayer);
 
           }
          // случайный ход. все остается
          if(nextStepObj.result.condition==false && 
           lastStepObj.colorFigure==activePlayer.color){
+           console.log('baad');
            activePlayer.active=true;
            passivePlayer.active=false;
          }
@@ -1139,28 +1433,36 @@ var delta=widthConteinerDiv/mainSizeWidth;
          if(    activePlayer.timeStep>0 && lastStepObj.colorFigure!=activePlayer.color )
           {
             activePlayer.timeStep=0;
+           // console.log('побили фигуру нууу');
         
           }
 
           if(activePlayer.timeStep==-1){
+            console.log('дернули не ту. справл')
             activePlayer.active=false;
             passivePlayer.active=true;
             activePlayer.timeStep=0;
+            console.log(activePlayer);
             if(activePlayer.active==false ){
               var abc = activePlayer;
               activePlayer=passivePlayer;
               passivePlayer=abc;
             }
       activePlayer.timeStep=0;
+      console.log(activePlayer);
+      console.log(passivePlayer);
 
           }
        }
 
  
+
+
   //красиво нарисовать в центре
    function   paintNiceFirure(figureDOM, nextStepObj,oldPosition){
     // для более удобного  доступа
     var newPositionID =nextStepObj.result.newPositionID
+   // console.log(newPositionID);
      //если хреново передвинули. оставили не там
      if(nextStepObj.result.newPositionID==false ){
       var PageX=oldPosition.clickPageX+sizeForGameSquare/2;
@@ -1186,6 +1488,7 @@ var delta=widthConteinerDiv/mainSizeWidth;
     function changeGameObjPosFigure(nextStepObj,lastStepObj){
           // подсветить клетки, у которых true
     var squareIDForAttention=Object.keys(nextStepObj.posFigure);
+    // console.log(squareIDForAttention)
  var newPositionID =nextStepObj.result.newPositionID
      for(var i=0; i<=squareIDForAttention.length-1; i++){
        if(nextStepObj.posFigure[squareIDForAttention[i]].condition==true ){
@@ -1195,9 +1498,17 @@ var delta=widthConteinerDiv/mainSizeWidth;
  // перезаписать положение с учетом перемещения клетки
  // какой цвет был
     var whichColorWas= about.arrFigure[lastStepObj.currentIDSquare];
+    // console.log(newPositionID);
+    // var abc=lastStepObj.currentIDSquare
+  //   console.log(about.arrFigure[11]);
+
      delete about.arrFigure[lastStepObj.currentIDSquare];
 
      // а были перемещения фигур на игровом поле верные, тогда  true и ходит следующий
+    
+   // about.whoCanStep.translate=true;
+    
+
      // записать новый
      about.arrFigure[newPositionID]=whichColorWas;
      // скорректировать king
@@ -1218,6 +1529,7 @@ var delta=widthConteinerDiv/mainSizeWidth;
 // убрать обводку
  function deleteStrokeOnFigure(nextStepObj){
         var squareIDForAttention=Object.keys(nextStepObj.posFigure);
+      // console.log(squareIDForAttention)
          
       for(var i=0; i<=squareIDForAttention.length-1; i++){
       if(nextStepObj.posFigure[squareIDForAttention[i]].condition==true ){
@@ -1246,6 +1558,8 @@ function toBecomeKing (nextStepObj){
         about.king[abc]={color: nextStepObj.colorFigure,
           id: about.arrFigure[nextStepObj.result.newPositionID].id
         }
+    console.log('king')
+    console.log(about)
 
       return true;
     }
@@ -1257,6 +1571,7 @@ function toDrawKing(nextStepObj){
   
 
   var whoIsKing=Object.keys(nextStepObj.king); //["68"] всегда одно значение, текущее
+  console.log(whoIsKing);
   // найти квадрат, куда стала
   var elemToSquare=nextStepObj.result.newPositionID;
 // узнать id фигуры, что стоит там. сделать белый ободок
@@ -1279,6 +1594,7 @@ function canDoubleStep(lastStepObj,nextStepObj ){
  function deleteFigureOnDesk(nextStepObj){
   var checForFight=Object.keys(nextStepObj.forFightFigure);
   // проверка, есть ли что бить
+  //  console.log(checForFight)
     if(checForFight.length==0 || nextStepObj.result.newPositionID==false ){
       return;
     }
@@ -1292,14 +1608,21 @@ function canDoubleStep(lastStepObj,nextStepObj ){
 
     
    var deleteThisFigure=nextStepObj.forFightFigure[nextStepObj.result.newPositionID];
+  // console.log(deleteThisFigure)
 
    var deleteFigureID=about.arrFigure[deleteThisFigure].id;
+    console.log(deleteFigureID)
      var elem=document.getElementById(deleteFigureID);
 
    // фигура побита. значит эта фигура может ходить еще раз. записать ее данныею в какой  клетке
    var plusStep=nextStepObj.result.newPositionID;
+  // var plusStep=about.arrFigure[nextStepObj.result.newPositionID].id;
 
    about.whoCanStep.id=plusStep;
+   console.log(about)
+
+
+
 
      // тестовый подсчет очков
      countGame++;
@@ -1307,12 +1630,14 @@ function canDoubleStep(lastStepObj,nextStepObj ){
    //запланировать удаление
     setTimeout (function() { elem.setAttribute('display','none');  }, 1000);
    
+   console.log(countGame)
 // удалить из глобального объекта
  delete about.arrFigure[deleteThisFigure]
 
  // проверка ее в king
  if(deleteThisFigure in about.king){
    delete about.king[deleteThisFigure]
+   console.log('del king')
  }
  }
 
@@ -1322,16 +1647,18 @@ function canDoubleStep(lastStepObj,nextStepObj ){
  
  function victory() {
 // массив фигур, которые в игре
+ // var arrOfColor=Object.keys(about.arrFigure);
 // у кого первого 12 очков
+console.log('victory')
 
-  if(player1.count==12){
+  if(player1.count==10){
     // значит выиграл другой игрок
     countElemPlayer2.innerText='Вы победили';
     winner.color=player2.color;
     return player2.name;
     
   }
-  else if(player2.count==12){
+  else if(player2.count==10){
     countElemPlayer1.innerText='Вы победили';
     winner.color=player1.color;
 
@@ -1339,6 +1666,16 @@ function canDoubleStep(lastStepObj,nextStepObj ){
 
   }
   else {return false}
+ }
+
+ function deleteAllAqua(){
+   var allAquaArr=Object.keys(about.arrFigure);
+   console.log(allAquaArr);
+   for(var i=0; i<=allAquaArr.length-1; i++){
+    if(about.arrFigure[allAquaArr[i]].color=="aqua"){
+      delete about.arrFigure[allAquaArr[i]];
+    }
+   }
  }
 
  //записаь очки
@@ -1356,6 +1693,17 @@ function canDoubleStep(lastStepObj,nextStepObj ){
       player2.count=player2.count+1;
 
      }
+     // очко записать этому цвету
+    // проиграет,кто первым наберет больше очков
+    // выиграет как в обычных шашках, то тут проиграет
+
+    // поле очков player1
+    // поле очков player
+
+  //  countElemPlayer1.innerText='Счет '+player1.count;
+  //  countElemPlayer2.innerText='Счет '+player2.count;
+//показать счет
+// кто побил фиуру, получил очко - анимация окна со счетом
 
     if(player1.color==colorGameOver){
     countElemPlayer1.innerText='Счет '+player1.count;
@@ -1374,6 +1722,7 @@ function canDoubleStep(lastStepObj,nextStepObj ){
  // вибрация на мобильном
  function vibro(longFlag) {
   if ( navigator.vibrate ) { // есть поддержка Vibration API?
+    console.log('vibro')
       if ( !longFlag )
           window.navigator.vibrate(100); // вибрация 100мс
       else
@@ -1382,6 +1731,9 @@ function canDoubleStep(lastStepObj,nextStepObj ){
 }
 
 // свайп для мобильного.
+
+
+
 
 
 function ontouchStart(EO){
@@ -1397,9 +1749,11 @@ function ontouchStart(EO){
 
 function ontouchMove (EO){
  // EO.preventDefault();
+  console.log('ontouchMove')
 }
 
 function ontouchEnd (EO){
+  console.log('ontouchEnd')
   if(EO.changedTouches.length==1){
   var touchobj = EO.changedTouches[0]
   dist = touchobj.pageX - startX // получаем пройденную дистанцию
@@ -1413,12 +1767,12 @@ function handleswipe(isrightswipe){
   // чтобы выиграл тот,  чей ход сейчас
   if (isrightswipe){
     if(player1.active==true){
-      player2.count=12; // 12  что выигрывает другой
+      player2.count=1; // 12  что выигрывает другой
       winner.name=victory();
       
     }
     else{ 
-      player1.count=12; // 12  что выигрывает другой
+      player1.count=1; // 12  что выигрывает другой
       winner.name=victory();
     }
   }
@@ -1428,7 +1782,16 @@ function handleswipe(isrightswipe){
 
 
 }
+/*
+window.addEventListener('unload', attentionClose, false);
 
+function attentionClose(){
+  if(player1.active==true || player2.active==true){
+    console.log('анные будут потеряны')
+    alert('Данные будут потеряны')
+  }
+}
+*/
 window.onbeforeunload = function() {
   alert('Данные будут потеряны')
 
